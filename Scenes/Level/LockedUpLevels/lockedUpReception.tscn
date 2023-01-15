@@ -6,7 +6,7 @@
 [ext_resource path="res://Materials/kenney_prototype_textures/orange/texture_01.png" type="Texture" id=4]
 [ext_resource path="res://Materials/kenney_prototype_textures/orange/texture_12.png" type="Texture" id=5]
 [ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_01.png" type="Texture" id=6]
-[ext_resource path="res://Scenes/Level/LockedUpLevels/lockedUpReception.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Levels/LockedUpLevels/lockedUpReception.gd" type="Script" id=7]
 [ext_resource path="res://Fonts/Montserrat-Medium.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Models/Structures/MaletaAbajo.dae" type="PackedScene" id=9]
 [ext_resource path="res://Models/Structures/MaletaArriba.dae" type="PackedScene" id=10]
@@ -589,7 +589,6 @@ transform = Transform( 6.42778, 0, 0, 0, 0.488253, 0, 0, 0, 6.39571, -17.7944, 0
 shape = SubResource( 22 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Structures/Room/Floor"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 23 )
 material/0 = SubResource( 26 )
 
@@ -631,7 +630,6 @@ transform = Transform( 6.42778, 0, 0, 0, 0.488253, 0, 0, 0, 6.39571, -17.6317, 0
 shape = SubResource( 22 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Structures/Bathroom/Floor"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 23 )
 material/0 = SubResource( 26 )
 
@@ -673,7 +671,6 @@ transform = Transform( 0.0588966, 0, 6.39544, 0, 0.488253, 0, -6.42751, 0, 0.058
 shape = SubResource( 22 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Structures/Balcony/Floor"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 23 )
 material/0 = SubResource( 26 )
 
@@ -715,7 +712,6 @@ transform = Transform( 1.20001, 0, 0, 0, 0.250033, 0, 0, 0, 1.29093, 19.0329, 4.
 shape = SubResource( 22 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Floor2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 23 )
 material/0 = SubResource( 32 )
 
@@ -726,7 +722,6 @@ transform = Transform( 1.20001, 0, 0, 0, 0.250033, 0, 0, 0, 1.29093, 19.008, 2.3
 shape = SubResource( 22 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Floor3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 23 )
 material/0 = SubResource( 32 )
 
@@ -737,7 +732,6 @@ transform = Transform( 3.45871, 0, 0, 0, 0.488253, 0, 0, 0, 3.72075, 21.2617, 0,
 shape = SubResource( 22 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Floor"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 23 )
 material/0 = SubResource( 26 )
 
