@@ -1,0 +1,60 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_07.png" type="Texture" id=1]
+[ext_resource path="res://Materials/kenney_prototype_textures/green/texture_12.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/Player/LockedFPController.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/Levels/TestButton.gd" type="Script" id=4]
+
+[sub_resource type="CubeMesh" id=3]
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 3, 2, 1 )
+uv1_offset = Vector3( 1, 1, 1 )
+
+[sub_resource type="CubeMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_texture = ExtResource( 1 )
+uv1_scale = Vector3( 5, 5, 1 )
+
+[sub_resource type="BoxShape" id=5]
+
+[sub_resource type="CubeMesh" id=6]
+
+[node name="Main" type="Node"]
+
+[node name="Structures" type="Node" parent="."]
+
+[node name="Wall" type="MeshInstance" parent="Structures"]
+transform = Transform( 0.542884, 0, 0, 0, 1.90473, 0, 0, 0, 3.40601, -3.9158, 2.18914, -0.0197353 )
+mesh = SubResource( 3 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 4 )
+
+[node name="Wall2" type="MeshInstance" parent="Structures"]
+transform = Transform( 0.542884, 0, 0, 0, 1.90473, 0, 0, 0, 3.40601, 3.96067, 2.18914, -0.0197353 )
+mesh = SubResource( 3 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 4 )
+
+[node name="Floor" type="MeshInstance" parent="Structures"]
+transform = Transform( 3.39518, 0, 0, 0, 0.255283, 0, 0, 0, 3.39518, 0.0147803, 0.0297589, 0.0169462 )
+mesh = SubResource( 1 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 2 )
+
+[node name="KinematicBody" type="KinematicBody" parent="Structures"]
+transform = Transform( 0.376696, 0, 0, 0, 0.259387, 0, 0, 0, 0.244454, -0.00976777, 1.67005, -1.37183 )
+script = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Structures/KinematicBody"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Structures/KinematicBody"]
+mesh = SubResource( 6 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34244, 2.97403 )
+
+[connection signal="mouse_entered" from="Structures/KinematicBody" to="Structures/KinematicBody" method="_on_KinematicBody_mouse_entered"]
