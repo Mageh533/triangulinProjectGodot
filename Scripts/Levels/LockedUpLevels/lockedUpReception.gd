@@ -1,11 +1,14 @@
 extends Node
 
+export var difficulty = 5
+
 var currentCamera
 var time = 0
 var errors = 0
 onready var allCameras =  $AllCameras.get_children()
 var possibleAnomalies = ["movedObject", "objectDissapeared", "additionalObject"]
-var rooms = ["Hallway", "Room", "Bathroom", "Balcony", "Janitor's Closet"]
+var rooms = ["Hallway", "Room", "Bathroom", "Balcony", "Janitors_Closet"]
+var currentUsedRooms = []
 var currentAnomalies = {}
 var anomalyPressed = null
 var currentRoomPressed = null
@@ -18,6 +21,12 @@ func _ready():
 	$GUI/OnPC/AnomalyDetected.visible = false
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
 	$GUI/OnPC/ReportedStatus.visible = false
+	$Structures/Hallway/ObjetoAdicional.visible = false
+	$Structures/Room/ObjetoAdicional.visible = false
+	$Structures/Bathroom/ObjetoAdicional.visible = false
+	$Structures/Balcony/ObjetoAdicional.visible = false
+	$Structures/JanitorCloset/ObjetoAdicional.visible = false
+	
 	onLobby()
 	
 func _process(delta):
@@ -25,10 +34,16 @@ func _process(delta):
 	$GUI/OnPC/CurrentCamera.text = currentCamera.name
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.text = "Buscando Anomalia... %s" % str(int($AnomalyCooldown.time_left))
 	processTime(delta)
+	processAnomalyCounter()
 
 # My own Functions
+func processAnomalyCounter():
+	$GUI/OnPC/AnomalyCounter.text = "Anomalias Actuales: %s" % str(currentAnomalies.size())
+
 func correctAnomalyReported(anomalyNumber):
+	var anomalyRoomToFree = currentAnomalies[anomalyNumber]
 	currentAnomalies.erase(anomalyNumber)
+	currentUsedRooms.erase(anomalyRoomToFree[0])
 	$GUI/OnPC/ReportedStatus.visible = true
 	$GUI/OnPC/ReportedStatus/Bad.visible = false
 	$GUI/OnPC/ReportedStatus/Good.visible = true
@@ -72,13 +87,19 @@ func cooldownCounter():
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly2.disabled = true
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly3.disabled = true
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = true
-	
+
 func generateRandomAnomaly():
-	var anomaly = possibleAnomalies[rand_range(0, possibleAnomalies.size() - 1)]
-	var room = rooms[rand_range(0, possibleAnomalies.size() - 1)]
+	var randomRoom = randi() % rooms.size()
+	while rooms[randomRoom] in currentUsedRooms and currentUsedRooms.size() < 5:
+		randomRoom = randi() % rooms.size()
+	var anomaly = possibleAnomalies[randi() % possibleAnomalies.size()]
+	var room = rooms[randomRoom]
 	currentAnomalies[currentAnomalies.size()] = [room, anomaly]
+	currentUsedRooms.append(room)
+	print(str(currentUsedRooms))
 	$GUI/OnPC/AnomalyDetected.visible = true
 	$GUI/OnPC/AnomalyDetected/Timer.start()
+	print(str(currentAnomalies))
 
 func reportAnomaly():
 	var currentRoom = currentRoomPressed
@@ -95,7 +116,8 @@ func reviewAnomaly():
 		correctAnomalyReported(correctKey)
 	else:
 		incorrectAnomalyReported()
-	
+
+
 # Signal Functions
 
 func _on_Anomaly1_pressed():
@@ -103,18 +125,21 @@ func _on_Anomaly1_pressed():
 	cooldownCounter()
 	anomalyPressed = "additionalObject"
 	currentRoomPressed = get_viewport().get_camera().name
+	print(currentRoomPressed)
 
 func _on_Anomaly2_pressed():
 	$AnomalyCooldown.start()
 	cooldownCounter()
 	anomalyPressed = "movedObject"
 	currentRoomPressed = get_viewport().get_camera().name
+	print(currentRoomPressed)
 
 func _on_Anomaly3_pressed():
 	$AnomalyCooldown.start()
 	cooldownCounter()
 	anomalyPressed = "objectDissapeared"
 	currentRoomPressed = get_viewport().get_camera().name
+	print(currentRoomPressed)
 
 func _on_AnomalyCooldown_timeout():
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly1.disabled = false
@@ -160,7 +185,6 @@ func _on_GoLeft_button_up():
 func _on_Report_pressed():
 	if $GUI/OnPC/IncidentMenu.visible == false:
 		$GUI/OnPC/IncidentMenu.visible = true
-	generateRandomAnomaly()
 	print(str(currentAnomalies))
 
 func _on_LeaveIncident_pressed():
@@ -175,8 +199,15 @@ func _on_Player_canUsePC(status):
 func _on_Timer_timeout():
 	$GUI/OnPC/AnomalyDetected.visible = false
 
-
 func _on_ReportedTimer_timeout():
 	$GUI/OnPC/ReportedStatus.visible = false
 	anomalyPressed = null
 	currentRoomPressed = null
+
+func _on_AnomalySpawner_timeout():
+	if rand_range(1, 20) <= difficulty:
+		generateRandomAnomaly()
+
+
+func _on_DifficultyIncrease_timeout():
+	difficulty += 1
