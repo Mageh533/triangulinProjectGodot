@@ -7,25 +7,32 @@ onready var allCameras =  $AllCameras.get_children()
 var possibleAnomalies = ["movedObject", "objectDissapeared", "additionalObject"]
 var rooms = ["Hallway", "Room", "Bathroom", "Balcony", "Janitor's Closet"]
 var currentAnomalies = {}
+var anomalyPressed = null
+var currentRoomPressed = null
 
 # Built in _functions
 
 func _ready():
+	randomize()
 	$GUI/OnPC/IncidentMenu.visible = false
 	$GUI/OnPC/AnomalyDetected.visible = false
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
+	$GUI/OnPC/ReportedStatus.visible = false
 	onLobby()
 	
 func _process(delta):
 	currentCamera = get_viewport().get_camera()
 	$GUI/OnPC/CurrentCamera.text = currentCamera.name
-	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.text = "Please Wait... %s" % str(int($AnomalyCooldown.time_left))
+	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.text = "Buscando Anomalia... %s" % str(int($AnomalyCooldown.time_left))
 	processTime(delta)
 
 # My own Functions
 func correctAnomalyReported(anomalyNumber):
 	currentAnomalies.erase(anomalyNumber)
-	print("Anomaly Resolved")
+	$GUI/OnPC/ReportedStatus.visible = true
+	$GUI/OnPC/ReportedStatus/Bad.visible = false
+	$GUI/OnPC/ReportedStatus/Good.visible = true
+	$GUI/OnPC/ReportedStatus/ReportedTimer.start()
 	
 func incorrectAnomalyReported():
 	errors += 1
@@ -40,11 +47,10 @@ func incorrectAnomalyReported():
 	elif errors == 5:
 		$Structures/Lobby/MaletaArriba/Animacion.play("Fase5")
 		$Structures/Lobby/Godot.visible = false
-	$GUI/OnPC/IncidentMenu/Panel/Anomaly1.disabled = true
-	$GUI/OnPC/IncidentMenu/Panel/Anomaly2.disabled = true
-	$GUI/OnPC/IncidentMenu/Panel/Anomaly3.disabled = true
-	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = true
-	$AnomalyCooldown.start()
+	$GUI/OnPC/ReportedStatus.visible = true
+	$GUI/OnPC/ReportedStatus/Bad.visible = true
+	$GUI/OnPC/ReportedStatus/Good.visible = false
+	$GUI/OnPC/ReportedStatus/ReportedTimer.start()
 	
 func onUsingPC():
 	$GUI/Normal.visible = false
@@ -62,7 +68,10 @@ func processTime(delta):
 	time += 1 * delta
 	
 func cooldownCounter():
-	pass
+	$GUI/OnPC/IncidentMenu/Panel/Anomaly1.disabled = true
+	$GUI/OnPC/IncidentMenu/Panel/Anomaly2.disabled = true
+	$GUI/OnPC/IncidentMenu/Panel/Anomaly3.disabled = true
+	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = true
 	
 func generateRandomAnomaly():
 	var anomaly = possibleAnomalies[rand_range(0, possibleAnomalies.size() - 1)]
@@ -71,44 +80,49 @@ func generateRandomAnomaly():
 	$GUI/OnPC/AnomalyDetected.visible = true
 	$GUI/OnPC/AnomalyDetected/Timer.start()
 
-func reportAnomaly(anomalyType):
-	var currentRoom = get_viewport().get_camera().name
-	var reportedAnomaly = anomalyType
+func reportAnomaly():
+	var currentRoom = currentRoomPressed
+	var reportedAnomaly = anomalyPressed
 	var correctKey = null
 	for i in currentAnomalies:
 		if currentAnomalies[i] == [currentRoom, reportedAnomaly]:
 			correctKey = i
 	return correctKey
 
+func reviewAnomaly():
+	var correctKey = reportAnomaly()
+	if correctKey != null:
+		correctAnomalyReported(correctKey)
+	else:
+		incorrectAnomalyReported()
+	
 # Signal Functions
 
 func _on_Anomaly1_pressed():
-	var correctKey = reportAnomaly("additionalObject")
-	if correctKey != null:
-		correctAnomalyReported(correctKey)
-	else:
-		incorrectAnomalyReported()
-
+	$AnomalyCooldown.start()
+	cooldownCounter()
+	anomalyPressed = "additionalObject"
+	currentRoomPressed = get_viewport().get_camera().name
 
 func _on_Anomaly2_pressed():
-	var correctKey = reportAnomaly("movedObject")
-	if correctKey != null:
-		correctAnomalyReported(correctKey)
-	else:
-		incorrectAnomalyReported()
+	$AnomalyCooldown.start()
+	cooldownCounter()
+	anomalyPressed = "movedObject"
+	currentRoomPressed = get_viewport().get_camera().name
 
 func _on_Anomaly3_pressed():
-	var correctKey = reportAnomaly("objectDissapeared")
-	if correctKey != null:
-		correctAnomalyReported(correctKey)
-	else:
-		incorrectAnomalyReported()
+	$AnomalyCooldown.start()
+	cooldownCounter()
+	anomalyPressed = "objectDissapeared"
+	currentRoomPressed = get_viewport().get_camera().name
 
 func _on_AnomalyCooldown_timeout():
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly1.disabled = false
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly2.disabled = false
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly3.disabled = false
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
+	reviewAnomaly()
+	
 
 func _on_UsePC_button_up():
 	$GUI/Normal.visible = false
@@ -160,3 +174,9 @@ func _on_Player_canUsePC(status):
 
 func _on_Timer_timeout():
 	$GUI/OnPC/AnomalyDetected.visible = false
+
+
+func _on_ReportedTimer_timeout():
+	$GUI/OnPC/ReportedStatus.visible = false
+	anomalyPressed = null
+	currentRoomPressed = null

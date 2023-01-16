@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=2]
+[gd_scene load_steps=65 format=2]
 
 [ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_09.png" type="Texture" id=1]
 [ext_resource path="res://Models/Structures/desktop.dae" type="PackedScene" id=2]
@@ -79,6 +79,10 @@ bg_color = Color( 0, 0, 0, 0.364706 )
 
 [sub_resource type="DynamicFont" id=18]
 size = 24
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=47]
+size = 42
 font_data = ExtResource( 8 )
 
 [sub_resource type="DynamicFont" id=36]
@@ -383,6 +387,7 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
+frame = 1
 playing = true
 
 [node name="LeavePC" type="Button" parent="GUI/OnPC"]
@@ -482,10 +487,40 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -132.0
+margin_left = -159.0
 margin_top = -20.0
 custom_colors/font_color = Color( 1, 0.866667, 0, 1 )
-text = "Please Wait..."
+text = "Buscando Anomalia..."
+
+[node name="ReportedStatus" type="Control" parent="GUI/OnPC"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -200.0
+margin_right = 512.0
+
+[node name="Good" type="Label" parent="GUI/OnPC/ReportedStatus"]
+margin_left = 37.0
+margin_top = 79.0
+margin_right = 439.0
+margin_bottom = 149.0
+custom_colors/font_color = Color( 0.298039, 0.929412, 0, 1 )
+custom_fonts/font = SubResource( 47 )
+text = "Anomalia Resuelta"
+align = 1
+
+[node name="Bad" type="Label" parent="GUI/OnPC/ReportedStatus"]
+margin_left = 3.0
+margin_top = 79.0
+margin_right = 541.0
+margin_bottom = 149.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 47 )
+text = "Anomalia No Encontrada"
+align = 1
+
+[node name="ReportedTimer" type="Timer" parent="GUI/OnPC/ReportedStatus"]
+wait_time = 2.0
+one_shot = true
 
 [node name="Time" type="Label" parent="GUI/OnPC"]
 margin_right = 253.0
@@ -494,13 +529,15 @@ custom_fonts/font = SubResource( 36 )
 text = "22:00"
 
 [node name="AnomalyDetected" type="Label" parent="GUI/OnPC"]
-margin_left = 543.0
-margin_top = 374.0
-margin_right = 1384.0
-margin_bottom = 466.0
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -485.0
+margin_top = 94.0
+margin_right = 489.0
+margin_bottom = 186.0
 custom_colors/font_color = Color( 1, 0.027451, 0.027451, 1 )
 custom_fonts/font = SubResource( 45 )
-text = "Anomalia Detectada"
+text = "Ha Ocurrido una Anomalia"
 align = 1
 
 [node name="Timer" type="Timer" parent="GUI/OnPC/AnomalyDetected"]
@@ -804,6 +841,7 @@ one_shot = true
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/Anomaly2" to="." method="_on_Anomaly2_pressed"]
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/Anomaly3" to="." method="_on_Anomaly3_pressed"]
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/LeaveIncident" to="." method="_on_LeaveIncident_pressed"]
+[connection signal="timeout" from="GUI/OnPC/ReportedStatus/ReportedTimer" to="." method="_on_ReportedTimer_timeout"]
 [connection signal="timeout" from="GUI/OnPC/AnomalyDetected/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="canUsePC" from="Player" to="." method="_on_Player_canUsePC"]
 [connection signal="onPc" from="Player" to="." method="_on_Player_onPc"]
