@@ -503,6 +503,10 @@ custom_fonts/font = SubResource( 45 )
 text = "Anomalia Detectada"
 align = 1
 
+[node name="Timer" type="Timer" parent="GUI/OnPC/AnomalyDetected"]
+wait_time = 3.0
+one_shot = true
+
 [node name="Structures" type="Node" parent="."]
 
 [node name="Lobby" type="Node" parent="Structures"]
@@ -800,6 +804,7 @@ one_shot = true
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/Anomaly2" to="." method="_on_Anomaly2_pressed"]
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/Anomaly3" to="." method="_on_Anomaly3_pressed"]
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/LeaveIncident" to="." method="_on_LeaveIncident_pressed"]
+[connection signal="timeout" from="GUI/OnPC/AnomalyDetected/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="canUsePC" from="Player" to="." method="_on_Player_canUsePC"]
 [connection signal="onPc" from="Player" to="." method="_on_Player_onPc"]
 [connection signal="timeout" from="AnomalyCooldown" to="." method="_on_AnomalyCooldown_timeout"]
