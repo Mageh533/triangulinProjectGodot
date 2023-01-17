@@ -1,15 +1,22 @@
 extends Node
 
 export var difficulty = 5
+export var shadowDifficulty = 5
 
 var currentCamera
+var anomalyCounter = 0
 var time = 0
 var errors = 0
+
 onready var allCameras =  $AllCameras.get_children()
+
 var possibleAnomalies = ["movedObject", "objectDissapeared", "additionalObject"]
 var rooms = ["Hallway", "Room", "Bathroom", "Balcony", "Janitors_Closet"]
+
 var currentUsedRooms = []
 var currentAnomalies = {}
+var possibleKeys = []
+var currentlyUsedKeys = []
 var anomalyPressed = null
 var currentRoomPressed = null
 
@@ -21,28 +28,40 @@ func _ready():
 	$GUI/OnPC/AnomalyDetected.visible = false
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
 	$GUI/OnPC/ReportedStatus.visible = false
-	$Structures/Hallway/ObjetoAdicional.visible = false
-	$Structures/Room/ObjetoAdicional.visible = false
-	$Structures/Bathroom/ObjetoAdicional.visible = false
-	$Structures/Balcony/ObjetoAdicional.visible = false
-	$Structures/JanitorCloset/ObjetoAdicional.visible = false
-	
+	$Structures/Lobby/Sombra.visible = false
+	$GUI/Normal/Subtitles.visible = false
+	$GUI/Keys.visible = false
+	hideAnomalies()	
 	onLobby()
 	
 func _process(delta):
 	currentCamera = get_viewport().get_camera()
 	$GUI/OnPC/CurrentCamera.text = currentCamera.name
-	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.text = "Buscando Anomalia... %s" % str(int($AnomalyCooldown.time_left))
+	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.text = "Buscando Anomalia... %s" % str(int($Timers/AnomalyCooldown.time_left))
 	processTime(delta)
 	processAnomalyCounter()
+	whileAnomaliesAreActive()
 
 # My own Functions
+func hideAnomalies():
+	$Structures/Hallway/ObjetoAdicional.visible = false
+	$Structures/Room/ObjetoAdicional.visible = false
+	$Structures/Bathroom/ObjetoAdicional.visible = false
+	$Structures/Balcony/ObjetoAdicional.visible = false
+	$Structures/Janitors_Closet/ObjetoAdicional.visible = false
+	$Structures/Hallway/ObjetoMovido.visible = false
+	$Structures/Room/ObjetoMovido.visible = false
+	$Structures/Bathroom/ObjetoMovido.visible = false
+	$Structures/Balcony/ObjetoMovido.visible = false
+	$Structures/Janitors_Closet/ObjetoMovido.visible = false
+
 func processAnomalyCounter():
 	$GUI/OnPC/AnomalyCounter.text = "Anomalias Actuales: %s" % str(currentAnomalies.size())
 
 func correctAnomalyReported(anomalyNumber):
 	var anomalyRoomToFree = currentAnomalies[anomalyNumber]
 	currentAnomalies.erase(anomalyNumber)
+	resetRoomAfterFixedAnomaly(anomalyRoomToFree[0])
 	currentUsedRooms.erase(anomalyRoomToFree[0])
 	$GUI/OnPC/ReportedStatus.visible = true
 	$GUI/OnPC/ReportedStatus/Bad.visible = false
@@ -90,15 +109,16 @@ func cooldownCounter():
 
 func generateRandomAnomaly():
 	var randomRoom = randi() % rooms.size()
-	while rooms[randomRoom] in currentUsedRooms and currentUsedRooms.size() < 5:
+	while rooms[randomRoom] in currentUsedRooms and currentUsedRooms.size() < 5: # Prevent more than one anomaly in the same room
 		randomRoom = randi() % rooms.size()
 	var anomaly = possibleAnomalies[randi() % possibleAnomalies.size()]
 	var room = rooms[randomRoom]
-	currentAnomalies[currentAnomalies.size()] = [room, anomaly]
+	currentAnomalies[anomalyCounter] = [room, anomaly]
+	anomalyCounter += 1
 	currentUsedRooms.append(room)
-	print(str(currentUsedRooms))
 	$GUI/OnPC/AnomalyDetected.visible = true
 	$GUI/OnPC/AnomalyDetected/Timer.start()
+	$Structures/Lobby/Anomaly.play()
 	print(str(currentAnomalies))
 
 func reportAnomaly():
@@ -118,30 +138,79 @@ func reviewAnomaly():
 		incorrectAnomalyReported()
 
 func whileAnomaliesAreActive():
-	pass
+	# Makes the anomalies happen visually
+	for i in currentAnomalies:
+		if possibleAnomalies[0] in currentAnomalies[i]:
+			var room = currentAnomalies[i]
+			var roomAnomalyObject = get_node("Structures/" + room[0] + "/Objeto")
+			var roomAnomalyObject2 = get_node("Structures/" + room[0] + "/ObjetoMovido")
+			roomAnomalyObject.visible = false
+			roomAnomalyObject2.visible = true
+		elif possibleAnomalies[1] in currentAnomalies[i]:
+			var room = currentAnomalies[i]
+			var roomAnomalyObject = get_node("Structures/" + room[0] + "/Objeto")
+			roomAnomalyObject.visible = false
+		elif possibleAnomalies[2] in currentAnomalies[i]:
+			var room = currentAnomalies[i]
+			var roomAnomalyObject = get_node("Structures/" + room[0] + "/ObjetoAdicional")
+			roomAnomalyObject.visible = true
+
+func resetRoomAfterFixedAnomaly(room):
+	# Get all the objects
+	var roomObject = get_node("Structures/" + room + "/Objeto")
+	var roomAdditionalObject = get_node("Structures/" + room + "/ObjetoAdicional")
+	var movedObject = get_node("Structures/" + room + "/ObjetoMovido")
+	# Put them back to how they should be
+	roomObject.visible = true
+	roomAdditionalObject.visible = false
+	movedObject.visible = false
+
+func createShadowEvent():
+	var correctKeySet = false
+	# Clear the arrays from previous events
+	possibleKeys.clear()
+	currentlyUsedKeys.clear()
+	$Structures/Lobby/Sombra.visible = true
+	$Structures/Lobby/Sombra/Bell.play()
+	var randomKey = int(rand_range(001, 999))
+	$GUI/Normal/Subtitles.text = "Hola, quiero una llave para la habitacion: %s" % str(randomKey)
+	$GUI/Normal/Subtitles.visible = true
+	$Timers/SubtitleTimer.start()
+	# Prepare the array, correct key goes first then some dummy ones
+	while possibleKeys.size() < 10:
+		if !(correctKeySet):
+			possibleKeys.append(randomKey)
+			correctKeySet = true
+		else:
+			possibleKeys.append(int(rand_range(001, 999)))
+	
+	while currentlyUsedKeys.size() < 10:
+		var randomKeyButton = randi() % 10 + 1
+		if !(randomKeyButton in currentlyUsedKeys):
+			var keyButton = get_node("GUI/Keys/key" + str(randomKeyButton))
+			keyButton.text = str(possibleKeys.front())
+			possibleKeys.pop_front()
+			currentlyUsedKeys.append(randomKeyButton)
 
 # Signal Functions
 
 func _on_Anomaly1_pressed():
-	$AnomalyCooldown.start()
+	$Timers/AnomalyCooldown.start()
 	cooldownCounter()
 	anomalyPressed = "additionalObject"
 	currentRoomPressed = get_viewport().get_camera().name
-	print(currentRoomPressed)
 
 func _on_Anomaly2_pressed():
-	$AnomalyCooldown.start()
+	$Timers/AnomalyCooldown.start()
 	cooldownCounter()
 	anomalyPressed = "movedObject"
 	currentRoomPressed = get_viewport().get_camera().name
-	print(currentRoomPressed)
 
 func _on_Anomaly3_pressed():
-	$AnomalyCooldown.start()
+	$Timers/AnomalyCooldown.start()
 	cooldownCounter()
 	anomalyPressed = "objectDissapeared"
 	currentRoomPressed = get_viewport().get_camera().name
-	print(currentRoomPressed)
 
 func _on_AnomalyCooldown_timeout():
 	$GUI/OnPC/IncidentMenu/Panel/Anomaly1.disabled = false
@@ -187,7 +256,6 @@ func _on_GoLeft_button_up():
 func _on_Report_pressed():
 	if $GUI/OnPC/IncidentMenu.visible == false:
 		$GUI/OnPC/IncidentMenu.visible = true
-	print(str(currentAnomalies))
 
 func _on_LeaveIncident_pressed():
 	$GUI/OnPC/IncidentMenu.visible = false
@@ -213,3 +281,23 @@ func _on_AnomalySpawner_timeout():
 
 func _on_DifficultyIncrease_timeout():
 	difficulty += 1
+
+
+func _on_SubtitleTimer_timeout():
+	$GUI/Normal/Subtitles.visible = false
+
+
+func _on_ShadowSpawner_timeout():
+	if rand_range(1, 20) < shadowDifficulty:
+		createShadowEvent()
+
+
+func _on_TurnAround_pressed():
+	if $GUI/Keys.visible:
+		$GUI/Keys.visible = false
+	else:
+		$GUI/Keys.visible = true
+
+
+func _on_ShadowEventTime_timeout():
+	print("PC Disabled for 10 seconds")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=2]
+[gd_scene load_steps=75 format=2]
 
 [ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_09.png" type="Texture" id=1]
 [ext_resource path="res://Models/Structures/desktop.dae" type="PackedScene" id=2]
@@ -19,6 +19,8 @@
 [ext_resource path="res://Materials/icon.png" type="Texture" id=17]
 [ext_resource path="res://Models/Structures/Tablero.dae" type="PackedScene" id=18]
 [ext_resource path="res://Models/Structures/LlaveDeHotel.dae" type="PackedScene" id=19]
+[ext_resource path="res://Sounds/Anomalies/anomalyoccured.wav" type="AudioStream" id=20]
+[ext_resource path="res://Sounds/Anomalies/ding1.wav" type="AudioStream" id=21]
 
 [sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 0.0666667 )
@@ -45,12 +47,23 @@ border_width_bottom = 1
 border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="Theme" id=17]
+Button/colors/font_color = Color( 0.992157, 1, 0, 1 )
 Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
 Button/styles/disabled = SubResource( 46 )
 Button/styles/focus = SubResource( 15 )
 Button/styles/hover = SubResource( 15 )
 Button/styles/normal = SubResource( 15 )
 Button/styles/pressed = SubResource( 15 )
+
+[sub_resource type="Theme" id=53]
+Label/colors/font_color = Color( 1, 1, 1, 1 )
+Label/colors/font_color_shadow = Color( 0, 0, 0, 0 )
+Label/colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+Label/constants/shadow_as_outline = 10
+
+[sub_resource type="DynamicFont" id=52]
+size = 32
+font_data = ExtResource( 8 )
 
 [sub_resource type="SpriteFrames" id=33]
 animations = [ {
@@ -277,8 +290,18 @@ tracks/1/keys = {
 [sub_resource type="CubeMesh" id=37]
 
 [sub_resource type="SpatialMaterial" id=38]
+albedo_color = Color( 1, 0, 0, 1 )
 albedo_texture = ExtResource( 17 )
 uv1_scale = Vector3( 3, 2, 2 )
+
+[sub_resource type="SphereShape" id=49]
+
+[sub_resource type="SphereMesh" id=50]
+
+[sub_resource type="SpatialMaterial" id=51]
+albedo_color = Color( 0, 0.745098, 0.027451, 1 )
+albedo_texture = ExtResource( 17 )
+uv1_scale = Vector3( 2, 1, 1 )
 
 [sub_resource type="BoxShape" id=7]
 
@@ -336,6 +359,7 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
+shadowDifficulty = 20
 
 [node name="AllCameras" type="Spatial" parent="."]
 
@@ -363,10 +387,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="TurnAround" type="Button" parent="GUI/Normal"]
-margin_left = 550.0
-margin_top = 1019.0
-margin_right = 1326.0
-margin_bottom = 1060.0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -388.0
+margin_top = -41.0
+margin_right = 388.0
 theme = SubResource( 16 )
 text = "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 
@@ -381,6 +408,22 @@ margin_right = 272.0
 margin_bottom = 155.0
 theme = SubResource( 17 )
 
+[node name="Subtitles" type="Label" parent="GUI/Normal"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -387.0
+margin_top = -155.0
+margin_right = 383.0
+margin_bottom = -72.0
+theme = SubResource( 53 )
+custom_fonts/font = SubResource( 52 )
+text = "Subtitulos
+"
+align = 1
+valign = 1
+
 [node name="OnPC" type="Control" parent="GUI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -391,6 +434,7 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
+frame = 2
 playing = true
 
 [node name="LeavePC" type="Button" parent="GUI/OnPC"]
@@ -554,6 +598,92 @@ margin_right = 158.0
 margin_bottom = 87.0
 text = "Anomalias Actuales: 0"
 
+[node name="Keys" type="Control" parent="GUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -218.0
+theme = SubResource( 17 )
+
+[node name="key1" type="Button" parent="GUI/Keys"]
+margin_left = 387.0
+margin_top = 271.0
+margin_right = 479.0
+margin_bottom = 350.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 1"
+
+[node name="key2" type="Button" parent="GUI/Keys"]
+margin_left = 687.0
+margin_top = 266.0
+margin_right = 779.0
+margin_bottom = 345.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 2"
+
+[node name="key3" type="Button" parent="GUI/Keys"]
+margin_left = 1001.0
+margin_top = 262.0
+margin_right = 1093.0
+margin_bottom = 341.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 3"
+
+[node name="key4" type="Button" parent="GUI/Keys"]
+margin_left = 1268.0
+margin_top = 263.0
+margin_right = 1360.0
+margin_bottom = 342.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 4"
+
+[node name="key5" type="Button" parent="GUI/Keys"]
+margin_left = 1495.0
+margin_top = 273.0
+margin_right = 1587.0
+margin_bottom = 352.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 5"
+
+[node name="key6" type="Button" parent="GUI/Keys"]
+margin_left = 375.0
+margin_top = 717.0
+margin_right = 467.0
+margin_bottom = 796.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 6"
+
+[node name="key7" type="Button" parent="GUI/Keys"]
+margin_left = 673.0
+margin_top = 711.0
+margin_right = 765.0
+margin_bottom = 790.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 7"
+
+[node name="key8" type="Button" parent="GUI/Keys"]
+margin_left = 981.0
+margin_top = 711.0
+margin_right = 1073.0
+margin_bottom = 790.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 8"
+
+[node name="key9" type="Button" parent="GUI/Keys"]
+margin_left = 1256.0
+margin_top = 712.0
+margin_right = 1348.0
+margin_bottom = 791.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 9"
+
+[node name="key10" type="Button" parent="GUI/Keys"]
+margin_left = 1482.0
+margin_top = 714.0
+margin_right = 1574.0
+margin_bottom = 793.0
+rect_pivot_offset = Vector2( 140, 40 )
+text = "Key 10"
+
 [node name="Structures" type="Node" parent="."]
 
 [node name="Lobby" type="Node" parent="Structures"]
@@ -651,6 +781,23 @@ transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-0
 [node name="LlaveDeHotel10" parent="Structures/Lobby/TableDeLlaves/Llaves" instance=ExtResource( 19 )]
 transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.781452, 2.47464, -0.501423 )
 
+[node name="Sombra" type="KinematicBody" parent="Structures/Lobby"]
+transform = Transform( -0.555694, 0.00128818, 0.831386, 7.25029e-05, 0.999999, -0.00150097, -0.831387, -0.000773808, -0.555693, -2.70573, 3.28658, -6.62754 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Lobby/Sombra"]
+shape = SubResource( 49 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Lobby/Sombra"]
+transform = Transform( 1, 5.82077e-11, 0, 0, 1, -2.91038e-11, 0, -5.82077e-11, 1, 0.13792, -0.060492, 0.0503938 )
+mesh = SubResource( 50 )
+material/0 = SubResource( 51 )
+
+[node name="Bell" type="AudioStreamPlayer" parent="Structures/Lobby/Sombra"]
+stream = ExtResource( 21 )
+
+[node name="Anomaly" type="AudioStreamPlayer" parent="Structures/Lobby"]
+stream = ExtResource( 20 )
+
 [node name="Hallway" type="Node" parent="Structures"]
 
 [node name="Floor" type="StaticBody" parent="Structures/Hallway"]
@@ -695,6 +842,10 @@ mesh = SubResource( 48 )
 
 [node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Hallway"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.87251, 1.5551, 24.9537 )
+mesh = SubResource( 48 )
+
+[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Hallway"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.87251, 1.5551, 16.5271 )
 mesh = SubResource( 48 )
 
 [node name="Room" type="Node" parent="Structures"]
@@ -746,6 +897,10 @@ mesh = SubResource( 48 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -23.0995, 1.5551, 14.9289 )
 mesh = SubResource( 48 )
 
+[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Room"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5996, 2.08823, 19.3205 )
+mesh = SubResource( 48 )
+
 [node name="Bathroom" type="Node" parent="Structures"]
 
 [node name="Floor" type="StaticBody" parent="Structures/Bathroom"]
@@ -793,6 +948,10 @@ mesh = SubResource( 48 )
 
 [node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Bathroom"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22.8539, 1.5551, 35.505 )
+mesh = SubResource( 48 )
+
+[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Bathroom"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -17.334, 1.5551, 43.8012 )
 mesh = SubResource( 48 )
 
 [node name="Balcony" type="Node" parent="Structures"]
@@ -844,69 +1003,77 @@ mesh = SubResource( 48 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.1451, 1.36848, 24.1238 )
 mesh = SubResource( 48 )
 
-[node name="JanitorCloset" type="Node" parent="Structures"]
+[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Balcony"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.6474, 3.52732, 17.8346 )
+mesh = SubResource( 48 )
 
-[node name="Floor2" type="StaticBody" parent="Structures/JanitorCloset"]
+[node name="Janitors_Closet" type="Node" parent="Structures"]
+
+[node name="Floor2" type="StaticBody" parent="Structures/Janitors_Closet"]
 transform = Transform( 1.20001, 0, 0, 0, 0.250033, 0, 0, 0, 1.29093, 19.0329, 4.1296, 43.8992 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Structures/JanitorCloset/Floor2"]
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Floor2"]
 shape = SubResource( 22 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Floor2"]
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Floor2"]
 mesh = SubResource( 23 )
 material/0 = SubResource( 32 )
 
-[node name="Floor3" type="StaticBody" parent="Structures/JanitorCloset"]
+[node name="Floor3" type="StaticBody" parent="Structures/Janitors_Closet"]
 transform = Transform( 1.20001, 0, 0, 0, 0.250033, 0, 0, 0, 1.29093, 19.008, 2.32781, 43.8747 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Structures/JanitorCloset/Floor3"]
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Floor3"]
 shape = SubResource( 22 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Floor3"]
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Floor3"]
 mesh = SubResource( 23 )
 material/0 = SubResource( 32 )
 
-[node name="Floor" type="StaticBody" parent="Structures/JanitorCloset"]
+[node name="Floor" type="StaticBody" parent="Structures/Janitors_Closet"]
 transform = Transform( 3.45871, 0, 0, 0, 0.488253, 0, 0, 0, 3.72075, 21.2617, 0, 41.4388 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Structures/JanitorCloset/Floor"]
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Floor"]
 shape = SubResource( 22 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Floor"]
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Floor"]
 mesh = SubResource( 23 )
 material/0 = SubResource( 26 )
 
-[node name="Wall" type="StaticBody" parent="Structures/JanitorCloset"]
+[node name="Wall" type="StaticBody" parent="Structures/Janitors_Closet"]
 transform = Transform( 3.74728, 0, 0, 0, 2.46725, 0, 0, 0, 0.279811, 21.0447, 2.91317, 45.4414 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Structures/JanitorCloset/Wall"]
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Wall"]
 shape = SubResource( 24 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Wall"]
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Wall"]
 mesh = SubResource( 25 )
 material/0 = SubResource( 27 )
 
-[node name="Wall2" type="StaticBody" parent="Structures/JanitorCloset"]
+[node name="Wall2" type="StaticBody" parent="Structures/Janitors_Closet"]
 transform = Transform( -2.83133e-07, 0, 0.279811, 0, 2.46725, 0, -3.71057, 0, -7.00656e-09, 17.5498, 2.91317, 41.4188 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Structures/JanitorCloset/Wall2"]
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Wall2"]
 shape = SubResource( 24 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Structures/JanitorCloset/Wall2"]
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Wall2"]
 mesh = SubResource( 25 )
 material/0 = SubResource( 28 )
 
-[node name="SpotLight" type="SpotLight" parent="Structures/JanitorCloset"]
+[node name="SpotLight" type="SpotLight" parent="Structures/Janitors_Closet"]
 transform = Transform( 1, 0, 0, 0, -0.195946, 0.980615, 0, -0.980615, -0.195946, 19.002, 8.00607, 40.5262 )
 spot_range = 16.8993
 spot_angle = 54.3101
 
-[node name="Objeto" type="MeshInstance" parent="Structures/JanitorCloset"]
+[node name="Objeto" type="MeshInstance" parent="Structures/Janitors_Closet"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6117, 1.45879, 43.9622 )
 mesh = SubResource( 48 )
 
-[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/JanitorCloset"]
+[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Janitors_Closet"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4495, 1.5551, 43.9114 )
+mesh = SubResource( 48 )
+
+[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Janitors_Closet"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6117, 5.30543, 43.9622 )
 mesh = SubResource( 48 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
@@ -915,19 +1082,34 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00614643, 2.42703, -1.50567 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 9 )
 
-[node name="AnomalyCooldown" type="Timer" parent="."]
-wait_time = 10.0
-one_shot = true
+[node name="Timers" type="Node" parent="."]
 
-[node name="AnomalySpawner" type="Timer" parent="."]
-wait_time = 10.0
+[node name="ShadowSpawner" type="Timer" parent="Timers"]
+wait_time = 15.0
 autostart = true
 
-[node name="DifficultyIncrease" type="Timer" parent="."]
+[node name="SubtitleTimer" type="Timer" parent="Timers"]
+wait_time = 5.0
+one_shot = true
+
+[node name="DifficultyIncrease" type="Timer" parent="Timers"]
 wait_time = 60.0
 autostart = true
 
+[node name="AnomalySpawner" type="Timer" parent="Timers"]
+wait_time = 10.0
+autostart = true
+
+[node name="AnomalyCooldown" type="Timer" parent="Timers"]
+wait_time = 10.0
+one_shot = true
+
+[node name="ShadowEventTime" type="Timer" parent="Timers"]
+wait_time = 10.0
+one_shot = true
+
 [connection signal="button_up" from="GUI/Normal/TurnAround" to="Player" method="_on_Button_button_up"]
+[connection signal="pressed" from="GUI/Normal/TurnAround" to="." method="_on_TurnAround_pressed"]
 [connection signal="button_up" from="GUI/Normal/UsePC" to="." method="_on_UsePC_button_up"]
 [connection signal="button_up" from="GUI/Normal/UsePC" to="Player" method="_on_UsePC_button_up"]
 [connection signal="button_up" from="GUI/OnPC/LeavePC" to="." method="_on_LeavePC_button_up"]
@@ -943,6 +1125,9 @@ autostart = true
 [connection signal="timeout" from="GUI/OnPC/AnomalyDetected/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="canUsePC" from="Player" to="." method="_on_Player_canUsePC"]
 [connection signal="onPc" from="Player" to="." method="_on_Player_onPc"]
-[connection signal="timeout" from="AnomalyCooldown" to="." method="_on_AnomalyCooldown_timeout"]
-[connection signal="timeout" from="AnomalySpawner" to="." method="_on_AnomalySpawner_timeout"]
-[connection signal="timeout" from="DifficultyIncrease" to="." method="_on_DifficultyIncrease_timeout"]
+[connection signal="timeout" from="Timers/ShadowSpawner" to="." method="_on_ShadowSpawner_timeout"]
+[connection signal="timeout" from="Timers/SubtitleTimer" to="." method="_on_SubtitleTimer_timeout"]
+[connection signal="timeout" from="Timers/DifficultyIncrease" to="." method="_on_DifficultyIncrease_timeout"]
+[connection signal="timeout" from="Timers/AnomalySpawner" to="." method="_on_AnomalySpawner_timeout"]
+[connection signal="timeout" from="Timers/AnomalyCooldown" to="." method="_on_AnomalyCooldown_timeout"]
+[connection signal="timeout" from="Timers/ShadowEventTime" to="." method="_on_ShadowEventTime_timeout"]
