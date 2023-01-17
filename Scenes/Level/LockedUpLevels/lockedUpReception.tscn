@@ -359,8 +359,7 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
-difficulty = null
-shadowDifficulty = 10
+shadowDifficulty = 20
 
 [node name="AllCameras" type="Spatial" parent="."]
 
@@ -435,7 +434,7 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
-frame = 1
+frame = 4
 playing = true
 
 [node name="LeavePC" type="Button" parent="GUI/OnPC"]
@@ -1110,7 +1109,10 @@ wait_time = 10.0
 one_shot = true
 
 [node name="DisablePC" type="Timer" parent="Timers"]
+wait_time = 10.0
+one_shot = true
 
+[connection signal="kickPlayerOutOfPC" from="." to="Player" method="_on_Main_kickPlayerOutOfPC"]
 [connection signal="button_up" from="GUI/Normal/TurnAround" to="Player" method="_on_Button_button_up"]
 [connection signal="pressed" from="GUI/Normal/TurnAround" to="." method="_on_TurnAround_pressed"]
 [connection signal="button_up" from="GUI/Normal/UsePC" to="." method="_on_UsePC_button_up"]

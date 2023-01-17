@@ -3,8 +3,6 @@ extends KinematicBody
 signal canUsePC
 signal onPc
 
-var PcEnabled = true
-
 onready var head = get_node("Head")
 var turned = false
 var onCamera = false
@@ -21,6 +19,11 @@ func _process(delta):
 		emit_signal("canUsePC", true)
 	else:
 		emit_signal("canUsePC", false)
+		
+func leavePc():
+	onCamera = false
+	$Head/Camera.current = true
+	$AnimationPlayer.play("RESET")
 
 func keyboardControls(delta):
 	if Input.is_action_pressed("move_left"):
@@ -47,6 +50,8 @@ func _on_UsePC_button_up():
 		$AnimationPlayer.play("useCamera")
 
 func _on_LeavePC_button_up():
-		onCamera = false
-		$Head/Camera.current = true
-		$AnimationPlayer.play("RESET")
+	leavePc()
+
+
+func _on_Main_kickPlayerOutOfPC():
+	leavePc()

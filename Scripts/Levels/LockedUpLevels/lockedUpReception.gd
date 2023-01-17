@@ -1,5 +1,7 @@
 extends Node
 
+signal kickPlayerOutOfPC
+
 export var difficulty = 5
 export var shadowDifficulty = 5
 
@@ -7,6 +9,8 @@ var currentCamera
 var anomalyCounter = 0
 var time = 0
 var errors = 0
+
+var pcEnabled = true
 
 onready var allCameras =  $AllCameras.get_children()
 
@@ -203,6 +207,7 @@ func createShadowEvent():
 	correctKeyToGive = randomKey
 	$GUI/Normal/Subtitles.visible = true
 	$Timers/SubtitleTimer.start()
+	$Timers/ShadowEventTime.start()
 	# Prepare the array, correct key goes first then some dummy ones
 	while possibleKeys.size() < 10:
 		if !(correctKeySet):
@@ -227,18 +232,24 @@ func reviewKeyChoice(key, keyButton):
 	if key == correctKeyToGive:
 		$Timers/ShadowEventTime.stop()
 		$GUI/Normal/Subtitles.text = "Gracias"
+		$GUI/Normal/Subtitles.visible = true
 		$Timers/SubtitleTimer.start()
 		resetKeyMeshes()
 		resetKeyButtons()
 	else:
+		$Timers/ShadowEventTime.stop()
+		$GUI/Normal/Subtitles.visible = true
 		$GUI/Normal/Subtitles.text = "Me tomas por bobo? Me enfado"
+		$Timers/SubtitleTimer.start()
 		resetKeyMeshes()
 		resetKeyButtons()
 		failedShadowEvent()
-		$Timers/SubtitleTimer.start()
 
 func failedShadowEvent():
 	$Structures/Lobby/Sombra.visible = false
+	pcEnabled = false
+	emit_signal("kickPlayerOutOfPC")
+	onLobby()
 	$Timers/DisablePC.start()
 
 # Signal Functions
@@ -310,7 +321,7 @@ func _on_LeaveIncident_pressed():
 	$GUI/OnPC/IncidentMenu.visible = false
 
 func _on_Player_canUsePC(status):
-	if status:
+	if status and pcEnabled:
 		$GUI/Normal/UsePC.visible = true
 	else:
 		$GUI/Normal/UsePC.visible = false
@@ -336,7 +347,7 @@ func _on_SubtitleTimer_timeout():
 	$GUI/Normal/Subtitles.visible = false
 
 func _on_ShadowSpawner_timeout():
-	if rand_range(1, 20) < shadowDifficulty:
+	if rand_range(1, 20) < shadowDifficulty and $Timers/DisablePC.is_stopped():
 		createShadowEvent()
 
 
@@ -348,7 +359,9 @@ func _on_TurnAround_pressed():
 
 
 func _on_ShadowEventTime_timeout():
+	$GUI/Normal/Subtitles.visible = true
 	$GUI/Normal/Subtitles.text = "No me haces caso y me enfado"
+	$Timers/SubtitleTimer.start()
 	resetKeyMeshes()
 	resetKeyButtons()
 	failedShadowEvent()
@@ -395,4 +408,4 @@ func _on_key10_pressed():
 
 
 func _on_DisablePC_timeout():
-	PcEnabled = true
+	pcEnabled = true
