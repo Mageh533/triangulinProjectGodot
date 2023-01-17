@@ -232,10 +232,14 @@ func reviewKeyChoice(key, keyButton):
 		resetKeyButtons()
 	else:
 		$GUI/Normal/Subtitles.text = "Me tomas por bobo? Me enfado"
+		resetKeyMeshes()
+		resetKeyButtons()
+		failedShadowEvent()
 		$Timers/SubtitleTimer.start()
 
 func failedShadowEvent():
-	pass
+	$Structures/Lobby/Sombra.visible = false
+	$Timers/DisablePC.start()
 
 # Signal Functions
 
@@ -344,9 +348,10 @@ func _on_TurnAround_pressed():
 
 
 func _on_ShadowEventTime_timeout():
+	$GUI/Normal/Subtitles.text = "No me haces caso y me enfado"
 	resetKeyMeshes()
 	resetKeyButtons()
-	$GUI/Normal/Subtitles.text = "No me haces caso y me enfado"
+	failedShadowEvent()
 
 
 func _on_key1_pressed():
@@ -387,3 +392,7 @@ func _on_key9_pressed():
 
 func _on_key10_pressed():
 	reviewKeyChoice(int($GUI/Keys/key10.text), 10)
+
+
+func _on_DisablePC_timeout():
+	PcEnabled = true

@@ -359,6 +359,7 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
+difficulty = null
 shadowDifficulty = 10
 
 [node name="AllCameras" type="Spatial" parent="."]
@@ -1108,6 +1109,8 @@ one_shot = true
 wait_time = 10.0
 one_shot = true
 
+[node name="DisablePC" type="Timer" parent="Timers"]
+
 [connection signal="button_up" from="GUI/Normal/TurnAround" to="Player" method="_on_Button_button_up"]
 [connection signal="pressed" from="GUI/Normal/TurnAround" to="." method="_on_TurnAround_pressed"]
 [connection signal="button_up" from="GUI/Normal/UsePC" to="." method="_on_UsePC_button_up"]
@@ -1141,3 +1144,4 @@ one_shot = true
 [connection signal="timeout" from="Timers/AnomalySpawner" to="." method="_on_AnomalySpawner_timeout"]
 [connection signal="timeout" from="Timers/AnomalyCooldown" to="." method="_on_AnomalyCooldown_timeout"]
 [connection signal="timeout" from="Timers/ShadowEventTime" to="." method="_on_ShadowEventTime_timeout"]
+[connection signal="timeout" from="Timers/DisablePC" to="." method="_on_DisablePC_timeout"]

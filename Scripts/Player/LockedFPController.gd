@@ -3,6 +3,8 @@ extends KinematicBody
 signal canUsePC
 signal onPc
 
+var PcEnabled = true
+
 onready var head = get_node("Head")
 var turned = false
 var onCamera = false
