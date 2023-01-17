@@ -17,6 +17,7 @@ var currentUsedRooms = []
 var currentAnomalies = {}
 var possibleKeys = []
 var currentlyUsedKeys = []
+var correctKeyToGive
 var anomalyPressed = null
 var currentRoomPressed = null
 
@@ -43,6 +44,19 @@ func _process(delta):
 	whileAnomaliesAreActive()
 
 # My own Functions
+func resetKeyMeshes():
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel1.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel2.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel3.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel4.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel5.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel6.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel7.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel8.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel9.visible = true
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel10.visible = true
+	$Structures/Lobby/Sombra.visible = false
+
 func hideAnomalies():
 	$Structures/Hallway/ObjetoAdicional.visible = false
 	$Structures/Room/ObjetoAdicional.visible = false
@@ -54,6 +68,18 @@ func hideAnomalies():
 	$Structures/Bathroom/ObjetoMovido.visible = false
 	$Structures/Balcony/ObjetoMovido.visible = false
 	$Structures/Janitors_Closet/ObjetoMovido.visible = false
+
+func resetKeyButtons():
+	$GUI/Keys/key1.visible = true
+	$GUI/Keys/key2.visible = true
+	$GUI/Keys/key3.visible = true
+	$GUI/Keys/key4.visible = true
+	$GUI/Keys/key5.visible = true
+	$GUI/Keys/key6.visible = true
+	$GUI/Keys/key7.visible = true
+	$GUI/Keys/key8.visible = true
+	$GUI/Keys/key9.visible = true
+	$GUI/Keys/key10.visible = true
 
 func processAnomalyCounter():
 	$GUI/OnPC/AnomalyCounter.text = "Anomalias Actuales: %s" % str(currentAnomalies.size())
@@ -174,6 +200,7 @@ func createShadowEvent():
 	$Structures/Lobby/Sombra/Bell.play()
 	var randomKey = int(rand_range(001, 999))
 	$GUI/Normal/Subtitles.text = "Hola, quiero una llave para la habitacion: %s" % str(randomKey)
+	correctKeyToGive = randomKey
 	$GUI/Normal/Subtitles.visible = true
 	$Timers/SubtitleTimer.start()
 	# Prepare the array, correct key goes first then some dummy ones
@@ -191,6 +218,24 @@ func createShadowEvent():
 			keyButton.text = str(possibleKeys.front())
 			possibleKeys.pop_front()
 			currentlyUsedKeys.append(randomKeyButton)
+
+func reviewKeyChoice(key, keyButton):
+	var keyMesh = get_node("Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel" + str(keyButton))
+	var guiKeyButton = get_node("GUI/Keys/key" + str(keyButton))
+	guiKeyButton.visible = false
+	keyMesh.visible = false
+	if key == correctKeyToGive:
+		$Timers/ShadowEventTime.stop()
+		$GUI/Normal/Subtitles.text = "Gracias"
+		$Timers/SubtitleTimer.start()
+		resetKeyMeshes()
+		resetKeyButtons()
+	else:
+		$GUI/Normal/Subtitles.text = "Me tomas por bobo? Me enfado"
+		$Timers/SubtitleTimer.start()
+
+func failedShadowEvent():
+	pass
 
 # Signal Functions
 
@@ -286,7 +331,6 @@ func _on_DifficultyIncrease_timeout():
 func _on_SubtitleTimer_timeout():
 	$GUI/Normal/Subtitles.visible = false
 
-
 func _on_ShadowSpawner_timeout():
 	if rand_range(1, 20) < shadowDifficulty:
 		createShadowEvent()
@@ -300,4 +344,46 @@ func _on_TurnAround_pressed():
 
 
 func _on_ShadowEventTime_timeout():
-	print("PC Disabled for 10 seconds")
+	resetKeyMeshes()
+	resetKeyButtons()
+	$GUI/Normal/Subtitles.text = "No me haces caso y me enfado"
+
+
+func _on_key1_pressed():
+	reviewKeyChoice(int($GUI/Keys/key1.text), 1)
+
+
+func _on_key2_pressed():
+	reviewKeyChoice(int($GUI/Keys/key2.text), 2)
+
+
+func _on_key3_pressed():
+	reviewKeyChoice(int($GUI/Keys/key3.text), 3)
+
+
+func _on_key4_pressed():
+	reviewKeyChoice(int($GUI/Keys/key4.text), 4)
+
+
+func _on_key5_pressed():
+	reviewKeyChoice(int($GUI/Keys/key5.text), 5)
+
+
+func _on_key6_pressed():
+	reviewKeyChoice(int($GUI/Keys/key6.text), 6)
+
+
+func _on_key7_pressed():
+	reviewKeyChoice(int($GUI/Keys/key7.text), 7)
+
+
+func _on_key8_pressed():
+	reviewKeyChoice(int($GUI/Keys/key8.text), 8)
+
+
+func _on_key9_pressed():
+	reviewKeyChoice(int($GUI/Keys/key9.text), 9)
+
+
+func _on_key10_pressed():
+	reviewKeyChoice(int($GUI/Keys/key10.text), 10)

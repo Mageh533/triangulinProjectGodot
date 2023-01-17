@@ -359,7 +359,7 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
-shadowDifficulty = 20
+shadowDifficulty = 10
 
 [node name="AllCameras" type="Spatial" parent="."]
 
@@ -434,7 +434,7 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
-frame = 2
+frame = 1
 playing = true
 
 [node name="LeavePC" type="Button" parent="GUI/OnPC"]
@@ -604,7 +604,7 @@ anchor_bottom = 1.0
 margin_bottom = -218.0
 theme = SubResource( 17 )
 
-[node name="key1" type="Button" parent="GUI/Keys"]
+[node name="key1" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 387.0
 margin_top = 271.0
 margin_right = 479.0
@@ -612,7 +612,7 @@ margin_bottom = 350.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 1"
 
-[node name="key2" type="Button" parent="GUI/Keys"]
+[node name="key2" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 687.0
 margin_top = 266.0
 margin_right = 779.0
@@ -620,7 +620,7 @@ margin_bottom = 345.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 2"
 
-[node name="key3" type="Button" parent="GUI/Keys"]
+[node name="key3" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 1001.0
 margin_top = 262.0
 margin_right = 1093.0
@@ -628,7 +628,7 @@ margin_bottom = 341.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 3"
 
-[node name="key4" type="Button" parent="GUI/Keys"]
+[node name="key4" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 1268.0
 margin_top = 263.0
 margin_right = 1360.0
@@ -636,7 +636,7 @@ margin_bottom = 342.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 4"
 
-[node name="key5" type="Button" parent="GUI/Keys"]
+[node name="key5" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 1495.0
 margin_top = 273.0
 margin_right = 1587.0
@@ -644,7 +644,7 @@ margin_bottom = 352.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 5"
 
-[node name="key6" type="Button" parent="GUI/Keys"]
+[node name="key6" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 375.0
 margin_top = 717.0
 margin_right = 467.0
@@ -652,7 +652,7 @@ margin_bottom = 796.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 6"
 
-[node name="key7" type="Button" parent="GUI/Keys"]
+[node name="key7" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 673.0
 margin_top = 711.0
 margin_right = 765.0
@@ -660,7 +660,7 @@ margin_bottom = 790.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 7"
 
-[node name="key8" type="Button" parent="GUI/Keys"]
+[node name="key8" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 981.0
 margin_top = 711.0
 margin_right = 1073.0
@@ -668,7 +668,7 @@ margin_bottom = 790.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 8"
 
-[node name="key9" type="Button" parent="GUI/Keys"]
+[node name="key9" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 1256.0
 margin_top = 712.0
 margin_right = 1348.0
@@ -676,7 +676,7 @@ margin_bottom = 791.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 9"
 
-[node name="key10" type="Button" parent="GUI/Keys"]
+[node name="key10" type="Button" parent="GUI/Keys" groups=["keys"]]
 margin_left = 1482.0
 margin_top = 714.0
 margin_right = 1574.0
@@ -751,7 +751,7 @@ transform = Transform( -1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08
 
 [node name="Llaves" type="Spatial" parent="Structures/Lobby/TableDeLlaves"]
 
-[node name="LlaveDeHotel" parent="Structures/Lobby/TableDeLlaves/Llaves" instance=ExtResource( 19 )]
+[node name="LlaveDeHotel1" parent="Structures/Lobby/TableDeLlaves/Llaves" instance=ExtResource( 19 )]
 transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, 0.721919, 3.0829, -0.509203 )
 
 [node name="LlaveDeHotel2" parent="Structures/Lobby/TableDeLlaves/Llaves" instance=ExtResource( 19 )]
@@ -1123,6 +1123,16 @@ one_shot = true
 [connection signal="pressed" from="GUI/OnPC/IncidentMenu/Panel/LeaveIncident" to="." method="_on_LeaveIncident_pressed"]
 [connection signal="timeout" from="GUI/OnPC/ReportedStatus/ReportedTimer" to="." method="_on_ReportedTimer_timeout"]
 [connection signal="timeout" from="GUI/OnPC/AnomalyDetected/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="pressed" from="GUI/Keys/key1" to="." method="_on_key1_pressed"]
+[connection signal="pressed" from="GUI/Keys/key2" to="." method="_on_key2_pressed"]
+[connection signal="pressed" from="GUI/Keys/key3" to="." method="_on_key3_pressed"]
+[connection signal="pressed" from="GUI/Keys/key4" to="." method="_on_key4_pressed"]
+[connection signal="pressed" from="GUI/Keys/key5" to="." method="_on_key5_pressed"]
+[connection signal="pressed" from="GUI/Keys/key6" to="." method="_on_key6_pressed"]
+[connection signal="pressed" from="GUI/Keys/key7" to="." method="_on_key7_pressed"]
+[connection signal="pressed" from="GUI/Keys/key8" to="." method="_on_key8_pressed"]
+[connection signal="pressed" from="GUI/Keys/key9" to="." method="_on_key9_pressed"]
+[connection signal="pressed" from="GUI/Keys/key10" to="." method="_on_key10_pressed"]
 [connection signal="canUsePC" from="Player" to="." method="_on_Player_canUsePC"]
 [connection signal="onPc" from="Player" to="." method="_on_Player_onPc"]
 [connection signal="timeout" from="Timers/ShadowSpawner" to="." method="_on_ShadowSpawner_timeout"]
