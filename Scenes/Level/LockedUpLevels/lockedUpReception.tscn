@@ -336,7 +336,6 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
-difficulty = 20
 
 [node name="AllCameras" type="Spatial" parent="."]
 
@@ -392,7 +391,6 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
-frame = 3
 playing = true
 
 [node name="LeavePC" type="Button" parent="GUI/OnPC"]

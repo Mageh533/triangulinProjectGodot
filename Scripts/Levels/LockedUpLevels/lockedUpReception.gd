@@ -117,6 +117,8 @@ func reviewAnomaly():
 	else:
 		incorrectAnomalyReported()
 
+func whileAnomaliesAreActive():
+	pass
 
 # Signal Functions
 
