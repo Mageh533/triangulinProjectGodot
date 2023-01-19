@@ -1,16 +1,20 @@
 extends Node
 
 signal kickPlayerOutOfPC
+signal forcePlayerTurnAround
 
 export var difficulty = 5
 export var shadowDifficulty = 5
 
 var currentCamera
-var anomalyCounter = 0
 var time = 0
 var errors = 0
+var anomalyCounter = 0
 
 var pcEnabled = true
+var keyChoice = false
+var keyGiven = []
+var timeLeft = true
 
 onready var allCameras =  $AllCameras.get_children()
 
@@ -29,13 +33,7 @@ var currentRoomPressed = null
 
 func _ready():
 	randomize()
-	$GUI/OnPC/IncidentMenu.visible = false
-	$GUI/OnPC/AnomalyDetected.visible = false
-	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
-	$GUI/OnPC/ReportedStatus.visible = false
-	$Structures/Lobby/Sombra.visible = false
-	$GUI/Normal/Subtitles.visible = false
-	$GUI/Keys.visible = false
+	setUpScene()
 	hideAnomalies()	
 	onLobby()
 	
@@ -46,8 +44,26 @@ func _process(delta):
 	processTime(delta)
 	processAnomalyCounter()
 	whileAnomaliesAreActive()
+	if (errors > 4) or (time > 600) or (currentAnomalies.size() > 4) and $GUI/OnPC/AnimatedSprite.modulate.a < 1:
+		$GUI/OnPC/AnimatedSprite.modulate.a += 0.5 * delta
+	if currentAnomalies.size() > 4 and timeLeft:
+		timeLeft = false
+		playerFailed()
 
 # My own Functions
+func setUpScene():
+	$GUI/OnPC/IncidentMenu.visible = false
+	$GUI/OnPC/AnomalyDetected.visible = false
+	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
+	$GUI/OnPC/ReportedStatus.visible = false
+	$Structures/Lobby/Sombra.visible = false
+	$GUI/Normal/Subtitles.visible = false
+	$GUI/Keys.visible = false
+	$Structures/Lobby/desktop/LlaveDeHotel.visible = false
+	$GUI/OnPC/GameOver.visible = false
+	$Structures/Lobby/JumpscareGodot.visible = false
+	$GUI/GameOver.visible = false
+
 func resetKeyMeshes():
 	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel1.visible = true
 	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel2.visible = true
@@ -97,6 +113,7 @@ func correctAnomalyReported(anomalyNumber):
 	$GUI/OnPC/ReportedStatus/Bad.visible = false
 	$GUI/OnPC/ReportedStatus/Good.visible = true
 	$GUI/OnPC/ReportedStatus/ReportedTimer.start()
+	$GUI/OnPC/CorrectAnomaly.play()
 	
 func incorrectAnomalyReported():
 	errors += 1
@@ -111,10 +128,12 @@ func incorrectAnomalyReported():
 	elif errors == 5:
 		$Structures/Lobby/MaletaArriba/Animacion.play("Fase5")
 		$Structures/Lobby/Godot.visible = false
+		playerFailed()
 	$GUI/OnPC/ReportedStatus.visible = true
 	$GUI/OnPC/ReportedStatus/Bad.visible = true
 	$GUI/OnPC/ReportedStatus/Good.visible = false
 	$GUI/OnPC/ReportedStatus/ReportedTimer.start()
+	$GUI/OnPC/IncorrectAnomaly.play()
 	
 func onUsingPC():
 	$GUI/Normal.visible = false
@@ -123,8 +142,15 @@ func onUsingPC():
 func onLobby():
 	$GUI/Normal.visible = true
 	$GUI/OnPC.visible = false
-	
+
+func levelCompleted():
+	timeLeft = false
+	playerFailed()
+
 func processTime(delta):
+	if time >= 600:
+		if timeLeft:
+			levelCompleted()
 	if time / 10 > 10:
 		$GUI/OnPC/Time.text = "22:%s" % str(int(time / 10))
 	else:
@@ -144,7 +170,7 @@ func generateRandomAnomaly():
 	var anomaly = possibleAnomalies[randi() % possibleAnomalies.size()]
 	var room = rooms[randomRoom]
 	currentAnomalies[anomalyCounter] = [room, anomaly]
-	anomalyCounter += 1
+	anomalyCounter = anomalyCounter + 1
 	currentUsedRooms.append(room)
 	$GUI/OnPC/AnomalyDetected.visible = true
 	$GUI/OnPC/AnomalyDetected/Timer.start()
@@ -154,6 +180,7 @@ func generateRandomAnomaly():
 func reportAnomaly():
 	var currentRoom = currentRoomPressed
 	var reportedAnomaly = anomalyPressed
+	print("Room: %s and anomaly: %s " % [currentRoom, reportedAnomaly])
 	var correctKey = null
 	for i in currentAnomalies:
 		if currentAnomalies[i] == [currentRoom, reportedAnomaly]:
@@ -197,13 +224,17 @@ func resetRoomAfterFixedAnomaly(room):
 
 func createShadowEvent():
 	var correctKeySet = false
+	emit_signal("forcePlayerTurnAround")
 	# Clear the arrays from previous events
 	possibleKeys.clear()
 	currentlyUsedKeys.clear()
+	keyGiven.clear()
 	$Structures/Lobby/Sombra.visible = true
 	$Structures/Lobby/Sombra/Bell.play()
 	var randomKey = int(rand_range(001, 999))
 	$GUI/Normal/Subtitles.text = "Hola, quiero una llave para la habitacion: %s" % str(randomKey)
+	$Structures/Lobby/Sombra/Dialogue.play()
+	
 	correctKeyToGive = randomKey
 	$GUI/Normal/Subtitles.visible = true
 	$Timers/SubtitleTimer.start()
@@ -232,6 +263,7 @@ func reviewKeyChoice(key, keyButton):
 	if key == correctKeyToGive:
 		$Timers/ShadowEventTime.stop()
 		$GUI/Normal/Subtitles.text = "Gracias"
+		$Structures/Lobby/Sombra/Correct.play()
 		$GUI/Normal/Subtitles.visible = true
 		$Timers/SubtitleTimer.start()
 		resetKeyMeshes()
@@ -240,34 +272,73 @@ func reviewKeyChoice(key, keyButton):
 		$Timers/ShadowEventTime.stop()
 		$GUI/Normal/Subtitles.visible = true
 		$GUI/Normal/Subtitles.text = "Me tomas por bobo? Me enfado"
+		$Structures/Lobby/Sombra/Wrong.play()
 		$Timers/SubtitleTimer.start()
 		resetKeyMeshes()
 		resetKeyButtons()
 		failedShadowEvent()
+	keyGiven.clear()
+	$Structures/Lobby/desktop/LlaveDeHotel.visible = false
+	keyChoice = false
 
 func failedShadowEvent():
 	$Structures/Lobby/Sombra.visible = false
+	$Structures/Lobby/desktop/PCDisabled.play()
 	pcEnabled = false
-	emit_signal("kickPlayerOutOfPC")
+	keyGiven.clear()
+	emit_signal("kickPlayerOutOfPC", false)
 	onLobby()
 	$Timers/DisablePC.start()
+
+func flickerLight():
+	$Structures/Lobby/SpotLight.visible = false
+	$Timers/GameOverTimers/LightFlicker.start()
+
+func playerFailed():
+	# Disable all elements
+	$GUI/OnPC/LeavePC.visible = false
+	$GUI/OnPC/GoLeft.visible = false
+	$GUI/OnPC/GoLeft.visible = false
+	$GUI/OnPC/GoRight.visible = false
+	$GUI/OnPC/CurrentCamera.visible = false
+	$GUI/OnPC/Report.visible = false
+	$GUI/OnPC/IncidentMenu.visible = false
+	$GUI/OnPC/ReportedStatus.visible = false
+	$GUI/OnPC/Time.visible = false
+	$GUI/OnPC/AnomalyCounter.visible = false
+	# Show the label and static
+	$GUI/OnPC/GameOver.visible = true
+	# Start timer
+	$Timers/GameOverTimers/KickPlayerOfPc.start()
+	# Stop all gameplay
+	$Structures/Lobby/Sombra.visible = false
+	$Timers/AnomalySpawner.autostart = false
+	$Timers/AnomalySpawner.stop()
+	$Timers/ShadowSpawner.autostart = false
+	$Timers/ShadowSpawner.stop()
+	$Timers/ShadowEventTime.stop()
+	# Flicker lights to stop the player from seeing the briefcase open
+	flickerLight()
 
 # Signal Functions
 
 func _on_Anomaly1_pressed():
 	$Timers/AnomalyCooldown.start()
+	$GUI/OnPC/MenuOpen.play()
 	cooldownCounter()
 	anomalyPressed = "additionalObject"
 	currentRoomPressed = get_viewport().get_camera().name
 
 func _on_Anomaly2_pressed():
 	$Timers/AnomalyCooldown.start()
+	$GUI/OnPC/MenuOpen.play()
 	cooldownCounter()
 	anomalyPressed = "movedObject"
 	currentRoomPressed = get_viewport().get_camera().name
 
 func _on_Anomaly3_pressed():
 	$Timers/AnomalyCooldown.start()
+	$GUI/OnPC/MenuOpen.play()
 	cooldownCounter()
 	anomalyPressed = "objectDissapeared"
 	currentRoomPressed = get_viewport().get_camera().name
@@ -281,10 +352,12 @@ func _on_AnomalyCooldown_timeout():
 	
 
 func _on_UsePC_button_up():
+	$Structures/Lobby/desktop/PCUse2.play()
 	$GUI/Normal.visible = false
 
 
 func _on_LeavePC_button_up():
+	$Structures/Lobby/desktop/PCUse.play()
 	onLobby()
 
 
@@ -295,6 +368,7 @@ func _on_Player_onPc():
 
 func _on_GoRight_button_up():
 	var currentRoom = 0
+	$Structures/Lobby/desktop/PCUse.play()
 	for i in allCameras.size():
 		if allCameras[i].name == currentCamera.name:
 			currentRoom = i
@@ -305,6 +379,7 @@ func _on_GoRight_button_up():
 
 func _on_GoLeft_button_up():
 	var currentRoom = 0
+	$Structures/Lobby/desktop/PCUse.play()
 	for i in allCameras.size():
 		if allCameras[i].name == currentCamera.name:
 			currentRoom = i
@@ -314,8 +389,11 @@ func _on_GoLeft_button_up():
 		allCameras[allCameras.size() - 1].current = true
 
 func _on_Report_pressed():
+	$Structures/Lobby/desktop/PCUse.play()
 	if $GUI/OnPC/IncidentMenu.visible == false:
 		$GUI/OnPC/IncidentMenu.visible = true
+	$GUI/OnPC/MenuOpen.play()
+	
 
 func _on_LeaveIncident_pressed():
 	$GUI/OnPC/IncidentMenu.visible = false
@@ -331,8 +409,6 @@ func _on_Timer_timeout():
 
 func _on_ReportedTimer_timeout():
 	$GUI/OnPC/ReportedStatus.visible = false
-	anomalyPressed = null
-	currentRoomPressed = null
 
 func _on_AnomalySpawner_timeout():
 	if rand_range(1, 20) <= difficulty:
@@ -341,6 +417,7 @@ func _on_AnomalySpawner_timeout():
 
 func _on_DifficultyIncrease_timeout():
 	difficulty += 1
+	shadowDifficulty += 1
 
 
 func _on_SubtitleTimer_timeout():
@@ -352,15 +429,27 @@ func _on_ShadowSpawner_timeout():
 
 
 func _on_TurnAround_pressed():
-	if $GUI/Keys.visible:
-		$GUI/Keys.visible = false
+	if $Timers/ShadowEventTime.time_left > 0:
+		if $GUI/Keys.visible:
+			$GUI/Keys.visible = false
+		else:
+			$GUI/Keys.visible = true
 	else:
-		$GUI/Keys.visible = true
+		$GUI/Keys.visible = false
+	
+	if keyChoice:
+		$GUI/Keys.visible = false
+		$Timers/ShadowEventTime.stop()
+		$Structures/Lobby/desktop/LlaveDeHotel.visible = true
+		$Timers/GiveKey.start()
+		$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_ShadowEventTime_timeout():
+	$GUI/Keys.visible = false
 	$GUI/Normal/Subtitles.visible = true
-	$GUI/Normal/Subtitles.text = "No me haces caso y me enfado"
+	$GUI/Normal/Subtitles.text = "Me ignoras? y me enfado"
+	$Structures/Lobby/Sombra/Ignore.play()
 	$Timers/SubtitleTimer.start()
 	resetKeyMeshes()
 	resetKeyButtons()
@@ -368,44 +457,127 @@ func _on_ShadowEventTime_timeout():
 
 
 func _on_key1_pressed():
-	reviewKeyChoice(int($GUI/Keys/key1.text), 1)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel1.visible = false
+	keyGiven.append(int($GUI/Keys/key1.text))
+	keyGiven.append(1)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key2_pressed():
-	reviewKeyChoice(int($GUI/Keys/key2.text), 2)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel2.visible = false	
+	keyGiven.append(int($GUI/Keys/key2.text))
+	keyGiven.append(2)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key3_pressed():
-	reviewKeyChoice(int($GUI/Keys/key3.text), 3)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel3.visible = false
+	keyGiven.append(int($GUI/Keys/key3.text))
+	keyGiven.append(3)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key4_pressed():
-	reviewKeyChoice(int($GUI/Keys/key4.text), 4)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel4.visible = false
+	keyGiven.append(int($GUI/Keys/key4.text))
+	keyGiven.append(4)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key5_pressed():
-	reviewKeyChoice(int($GUI/Keys/key5.text), 5)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel5.visible = false
+	keyGiven.append(int($GUI/Keys/key5.text))
+	keyGiven.append(5)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key6_pressed():
-	reviewKeyChoice(int($GUI/Keys/key6.text), 6)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel6.visible = false
+	keyGiven.append(int($GUI/Keys/key6.text))
+	keyGiven.append(6)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key7_pressed():
-	reviewKeyChoice(int($GUI/Keys/key7.text), 7)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel7.visible = false
+	keyGiven.append(int($GUI/Keys/key7.text))
+	keyGiven.append(7)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key8_pressed():
-	reviewKeyChoice(int($GUI/Keys/key8.text), 8)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel8.visible = false
+	keyGiven.append(int($GUI/Keys/key8.text))
+	keyGiven.append(8)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key9_pressed():
-	reviewKeyChoice(int($GUI/Keys/key9.text), 9)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel9.visible = false
+	keyGiven.append(int($GUI/Keys/key9.text))
+	keyGiven.append(9)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_key10_pressed():
-	reviewKeyChoice(int($GUI/Keys/key10.text), 10)
+	keyChoice = true
+	$GUI/Keys.visible = false
+	$Structures/Lobby/TableDeLlaves/Llaves/LlaveDeHotel10.visible = false
+	keyGiven.append(int($GUI/Keys/key10.text))
+	keyGiven.append(10)
+	$Structures/Lobby/desktop/KeyPickup.play()
 
 
 func _on_DisablePC_timeout():
 	pcEnabled = true
+
+
+func _on_GiveKey_timeout():
+	reviewKeyChoice(keyGiven[0], keyGiven[1])
+
+
+func _on_KickPlayerOfPc_timeout():
+	onLobby()
+	var death = errors > 4 or currentAnomalies.size() > 4
+	emit_signal("kickPlayerOutOfPC", death)
+	if time >= 600:
+		$GUI/GameOver.visible = true
+	else:	
+		$Timers/GameOverTimers/Jumpscare.start()
+
+
+func _on_LightFlicker_timeout():
+	$Structures/Lobby/SpotLight.visible = true
+
+
+func _on_Jumpscare_timeout():
+	$Structures/Lobby/Jumpscare.current = true
+	$Structures/Lobby/JumpscareGodot.visible = true
+	$Structures/Lobby/JumpscareGodot/Jumpscare.play("Jumpscare")
+	$Structures/Lobby/JumpscareGodot/Jumpscare2.play()
+	$Timers/GameOverTimers/GameOver.start()
+
+func _on_GameOver_timeout():
+	$GUI/GameOver.visible = true
+
+
+func _on_Retry_pressed():
+	print(get_tree().reload_current_scene())

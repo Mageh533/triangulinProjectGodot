@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/anomalyoccured.wav-29221c1037b890ceebb8e7ee9eba8ebc.sample"
+path="res://.import/PcKey.wav-97c8379b9749f25245f796b88cc3afb4.sample"
 
 [deps]
 
-source_file="res://Sounds/Anomalies/anomalyoccured.wav"
-dest_files=[ "res://.import/anomalyoccured.wav-29221c1037b890ceebb8e7ee9eba8ebc.sample" ]
+source_file="res://Sounds/Sound Effects/PcKey.wav"
+dest_files=[ "res://.import/PcKey.wav-97c8379b9749f25245f796b88cc3afb4.sample" ]
 
 [params]
 

@@ -10,7 +10,7 @@ config_version=4
 
 [application]
 
-config/name="MagehJuegoQuantipuleA"
+config/name="Trials Of Psycho"
 run/main_scene="res://Scenes/Level/LockedUpLevels/lockedUpReception.tscn"
 config/icon="res://Materials/icon.png"
 

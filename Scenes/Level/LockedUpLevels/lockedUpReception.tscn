@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=2]
+[gd_scene load_steps=91 format=2]
 
 [ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_09.png" type="Texture" id=1]
 [ext_resource path="res://Models/Structures/desktop.dae" type="PackedScene" id=2]
@@ -19,8 +19,20 @@
 [ext_resource path="res://Materials/icon.png" type="Texture" id=17]
 [ext_resource path="res://Models/Structures/Tablero.dae" type="PackedScene" id=18]
 [ext_resource path="res://Models/Structures/LlaveDeHotel.dae" type="PackedScene" id=19]
-[ext_resource path="res://Sounds/Anomalies/anomalyoccured.wav" type="AudioStream" id=20]
-[ext_resource path="res://Sounds/Anomalies/ding1.wav" type="AudioStream" id=21]
+[ext_resource path="res://Sounds/Sound Effects/Anomalies/anomalyoccured.wav" type="AudioStream" id=20]
+[ext_resource path="res://Sounds/Sound Effects/Anomalies/ding1.wav" type="AudioStream" id=21]
+[ext_resource path="res://Sounds/Sound Effects/MouseClick.wav" type="AudioStream" id=22]
+[ext_resource path="res://Sounds/Sound Effects/keyPickup.wav" type="AudioStream" id=23]
+[ext_resource path="res://Sounds/Sound Effects/PcKey.wav" type="AudioStream" id=24]
+[ext_resource path="res://Sounds/VoiceLines/SombraHablando.wav" type="AudioStream" id=25]
+[ext_resource path="res://Sounds/VoiceLines/Gracias.wav" type="AudioStream" id=26]
+[ext_resource path="res://Sounds/VoiceLines/WrongKey.wav" type="AudioStream" id=27]
+[ext_resource path="res://Sounds/VoiceLines/Ignore.wav" type="AudioStream" id=28]
+[ext_resource path="res://Sounds/Sound Effects/IncidentMenu.wav" type="AudioStream" id=29]
+[ext_resource path="res://Sounds/Sound Effects/PCBroken.wav" type="AudioStream" id=30]
+[ext_resource path="res://Sounds/Sound Effects/jumpscare.wav" type="AudioStream" id=31]
+[ext_resource path="res://Sounds/Sound Effects/Anomalies/correctAnomaly.wav" type="AudioStream" id=32]
+[ext_resource path="res://Sounds/Sound Effects/Anomalies/incorrectAnomaly.wav" type="AudioStream" id=33]
 
 [sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 0.0666667 )
@@ -73,6 +85,11 @@ animations = [ {
 "speed": 5.0
 } ]
 
+[sub_resource type="DynamicFont" id=54]
+size = 120
+outline_color = Color( 1, 0, 0, 1 )
+font_data = ExtResource( 8 )
+
 [sub_resource type="DynamicFont" id=35]
 size = 60
 font_data = ExtResource( 8 )
@@ -107,6 +124,10 @@ font_data = ExtResource( 8 )
 [sub_resource type="DynamicFont" id=45]
 size = 72
 outline_color = Color( 1, 0, 0, 1 )
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=57]
+size = 100
 font_data = ExtResource( 8 )
 
 [sub_resource type="BoxShape" id=4]
@@ -294,6 +315,62 @@ albedo_color = Color( 1, 0, 0, 1 )
 albedo_texture = ExtResource( 17 )
 uv1_scale = Vector3( 3, 2, 2 )
 
+[sub_resource type="Animation" id=55]
+resource_name = "Jumpscare"
+length = 0.5
+step = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -3.56876, 2.76452, -5.96886 ), Vector3( -0.217122, 3.01917, -1.97306 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, -48.592, 0 ), Vector3( 0, -48.592, 0 ) ]
+}
+
+[sub_resource type="Animation" id=56]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( -3.56876, 2.76452, -5.96886 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, -48.592, 0 ) ]
+}
+
 [sub_resource type="SphereShape" id=49]
 
 [sub_resource type="SphereMesh" id=50]
@@ -359,7 +436,6 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
-shadowDifficulty = 20
 
 [node name="AllCameras" type="Spatial" parent="."]
 
@@ -429,6 +505,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = SubResource( 17 )
 
+[node name="MenuOpen" type="AudioStreamPlayer" parent="GUI/OnPC"]
+stream = ExtResource( 29 )
+
 [node name="AnimatedSprite" type="AnimatedSprite" parent="GUI/OnPC"]
 modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
@@ -436,6 +515,19 @@ scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
 frame = 4
 playing = true
+
+[node name="GameOver" type="Label" parent="GUI/OnPC"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -321.5
+margin_top = -74.0
+margin_right = 321.5
+margin_bottom = 74.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 54 )
+text = "ADIOS"
 
 [node name="LeavePC" type="Button" parent="GUI/OnPC"]
 anchor_left = 1.0
@@ -598,6 +690,12 @@ margin_right = 158.0
 margin_bottom = 87.0
 text = "Anomalias Actuales: 0"
 
+[node name="CorrectAnomaly" type="AudioStreamPlayer" parent="GUI/OnPC"]
+stream = ExtResource( 32 )
+
+[node name="IncorrectAnomaly" type="AudioStreamPlayer" parent="GUI/OnPC"]
+stream = ExtResource( 33 )
+
 [node name="Keys" type="Control" parent="GUI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -684,6 +782,38 @@ margin_bottom = 793.0
 rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 10"
 
+[node name="GameOver" type="Control" parent="GUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="GUI/GameOver"]
+position = Vector2( 955, 537.5 )
+scale = Vector2( 2.99688, 2.23125 )
+frames = SubResource( 33 )
+frame = 3
+playing = true
+
+[node name="Label" type="Label" parent="GUI/GameOver"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -286.5
+margin_top = -61.5
+margin_right = 286.5
+margin_bottom = 61.5
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 57 )
+text = "Game Over"
+
+[node name="Retry" type="Button" parent="GUI/GameOver"]
+margin_left = 793.0
+margin_top = 934.0
+margin_right = 1141.0
+margin_bottom = 1000.0
+text = "Reintentar"
+
 [node name="Structures" type="Node" parent="."]
 
 [node name="Lobby" type="Node" parent="Structures"]
@@ -715,6 +845,18 @@ transform = Transform( -4.37114e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.37114e-09, -
 [node name="LlaveDeHotel" parent="Structures/Lobby/desktop" instance=ExtResource( 19 )]
 transform = Transform( -4.37114e-08, -1, -1.42109e-14, 1, -4.37114e-08, 0, 0, -1.42109e-14, 1, -0.0427475, 19.8786, 4.8286 )
 
+[node name="KeyPickup" type="AudioStreamPlayer" parent="Structures/Lobby/desktop"]
+stream = ExtResource( 23 )
+
+[node name="PCUse" type="AudioStreamPlayer" parent="Structures/Lobby/desktop"]
+stream = ExtResource( 22 )
+
+[node name="PCUse2" type="AudioStreamPlayer" parent="Structures/Lobby/desktop"]
+stream = ExtResource( 24 )
+
+[node name="PCDisabled" type="AudioStreamPlayer" parent="Structures/Lobby/desktop"]
+stream = ExtResource( 30 )
+
 [node name="SpotLight" type="SpotLight" parent="Structures/Lobby"]
 transform = Transform( 0.949603, 0.0388066, 0.311044, -0.30862, 0.28938, 0.906098, -0.0548475, -0.956427, 0.286773, 1.04059, 6.45033, -1.54713 )
 light_energy = 4.028
@@ -743,6 +885,19 @@ anims/RESET = SubResource( 44 )
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.75617, 1.36177, -2.06736 )
 mesh = SubResource( 37 )
 material/0 = SubResource( 38 )
+
+[node name="JumpscareGodot" type="MeshInstance" parent="Structures/Lobby"]
+transform = Transform( 0.165354, 0, -0.187505, 0, 0.25, 0, 0.187505, 0, 0.165354, -3.56876, 2.76452, -5.96886 )
+mesh = SubResource( 37 )
+skeleton = NodePath("../Godot")
+material/0 = SubResource( 38 )
+
+[node name="Jumpscare" type="AnimationPlayer" parent="Structures/Lobby/JumpscareGodot"]
+anims/Jumpscare = SubResource( 55 )
+anims/RESET = SubResource( 56 )
+
+[node name="Jumpscare2" type="AudioStreamPlayer" parent="Structures/Lobby/JumpscareGodot"]
+stream = ExtResource( 31 )
 
 [node name="TableDeLlaves" type="Spatial" parent="Structures/Lobby"]
 
@@ -795,8 +950,24 @@ material/0 = SubResource( 51 )
 [node name="Bell" type="AudioStreamPlayer" parent="Structures/Lobby/Sombra"]
 stream = ExtResource( 21 )
 
+[node name="Dialogue" type="AudioStreamPlayer3D" parent="Structures/Lobby/Sombra"]
+transform = Transform( 1, -2.91038e-09, 4.47035e-07, 0, 1, -6.28643e-09, 2.98023e-08, 0, 1, 0, 0, 0 )
+stream = ExtResource( 25 )
+
+[node name="Ignore" type="AudioStreamPlayer3D" parent="Structures/Lobby/Sombra"]
+stream = ExtResource( 28 )
+
+[node name="Wrong" type="AudioStreamPlayer3D" parent="Structures/Lobby/Sombra"]
+stream = ExtResource( 27 )
+
+[node name="Correct" type="AudioStreamPlayer3D" parent="Structures/Lobby/Sombra"]
+stream = ExtResource( 26 )
+
 [node name="Anomaly" type="AudioStreamPlayer" parent="Structures/Lobby"]
 stream = ExtResource( 20 )
+
+[node name="Jumpscare" type="Camera" parent="Structures/Lobby"]
+transform = Transform( 0.748481, 0, 0.663156, 0, 1, 0, -0.663156, 0, 0.748481, 0.229922, 3.04442, -1.43636 )
 
 [node name="Hallway" type="Node" parent="Structures"]
 
@@ -1084,6 +1255,23 @@ environment = SubResource( 9 )
 
 [node name="Timers" type="Node" parent="."]
 
+[node name="GameOverTimers" type="Node" parent="Timers"]
+
+[node name="KickPlayerOfPc" type="Timer" parent="Timers/GameOverTimers"]
+wait_time = 3.0
+one_shot = true
+
+[node name="LightFlicker" type="Timer" parent="Timers/GameOverTimers"]
+one_shot = true
+
+[node name="Jumpscare" type="Timer" parent="Timers/GameOverTimers"]
+wait_time = 5.0
+one_shot = true
+
+[node name="GameOver" type="Timer" parent="Timers/GameOverTimers"]
+wait_time = 0.5
+one_shot = true
+
 [node name="ShadowSpawner" type="Timer" parent="Timers"]
 wait_time = 15.0
 autostart = true
@@ -1112,6 +1300,11 @@ one_shot = true
 wait_time = 10.0
 one_shot = true
 
+[node name="GiveKey" type="Timer" parent="Timers"]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="forcePlayerTurnAround" from="." to="Player" method="_on_Main_forcePlayerTurnAround"]
 [connection signal="kickPlayerOutOfPC" from="." to="Player" method="_on_Main_kickPlayerOutOfPC"]
 [connection signal="button_up" from="GUI/Normal/TurnAround" to="Player" method="_on_Button_button_up"]
 [connection signal="pressed" from="GUI/Normal/TurnAround" to="." method="_on_TurnAround_pressed"]
@@ -1138,8 +1331,13 @@ one_shot = true
 [connection signal="pressed" from="GUI/Keys/key8" to="." method="_on_key8_pressed"]
 [connection signal="pressed" from="GUI/Keys/key9" to="." method="_on_key9_pressed"]
 [connection signal="pressed" from="GUI/Keys/key10" to="." method="_on_key10_pressed"]
+[connection signal="pressed" from="GUI/GameOver/Retry" to="." method="_on_Retry_pressed"]
 [connection signal="canUsePC" from="Player" to="." method="_on_Player_canUsePC"]
 [connection signal="onPc" from="Player" to="." method="_on_Player_onPc"]
+[connection signal="timeout" from="Timers/GameOverTimers/KickPlayerOfPc" to="." method="_on_KickPlayerOfPc_timeout"]
+[connection signal="timeout" from="Timers/GameOverTimers/LightFlicker" to="." method="_on_LightFlicker_timeout"]
+[connection signal="timeout" from="Timers/GameOverTimers/Jumpscare" to="." method="_on_Jumpscare_timeout"]
+[connection signal="timeout" from="Timers/GameOverTimers/GameOver" to="." method="_on_GameOver_timeout"]
 [connection signal="timeout" from="Timers/ShadowSpawner" to="." method="_on_ShadowSpawner_timeout"]
 [connection signal="timeout" from="Timers/SubtitleTimer" to="." method="_on_SubtitleTimer_timeout"]
 [connection signal="timeout" from="Timers/DifficultyIncrease" to="." method="_on_DifficultyIncrease_timeout"]
@@ -1147,3 +1345,4 @@ one_shot = true
 [connection signal="timeout" from="Timers/AnomalyCooldown" to="." method="_on_AnomalyCooldown_timeout"]
 [connection signal="timeout" from="Timers/ShadowEventTime" to="." method="_on_ShadowEventTime_timeout"]
 [connection signal="timeout" from="Timers/DisablePC" to="." method="_on_DisablePC_timeout"]
+[connection signal="timeout" from="Timers/GiveKey" to="." method="_on_GiveKey_timeout"]

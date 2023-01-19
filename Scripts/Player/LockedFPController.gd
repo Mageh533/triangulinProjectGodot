@@ -6,16 +6,18 @@ signal onPc
 onready var head = get_node("Head")
 var turned = false
 var onCamera = false
+var gameOver = false
 
 func _ready():
 	$Head/Camera.current = true
+	Engine.set_target_fps(60)
 
 func _process(delta):
 	keyboardControls(delta)
 	if $AnimationPlayer.is_playing() == true:
-		if $AnimationPlayer.get_current_animation_position() > 0.49:
+		if $AnimationPlayer.get_current_animation_position() > 0.4:
 			emit_signal("onPc")
-	if head.rotation.y < deg2rad(-5):
+	if head.rotation.y < deg2rad(-5) and !(gameOver):
 		emit_signal("canUsePC", true)
 	else:
 		emit_signal("canUsePC", false)
@@ -53,5 +55,12 @@ func _on_LeavePC_button_up():
 	leavePc()
 
 
-func _on_Main_kickPlayerOutOfPC():
+func _on_Main_kickPlayerOutOfPC(death):
+	gameOver = death
 	leavePc()
+
+
+func _on_Main_forcePlayerTurnAround():
+	if turned:
+		head.rotate_y(deg2rad(180))
+		turned = false

@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/ding1.wav-981be393a6222062f8bef42cbbbf9475.sample"
+path="res://.import/correctAnomaly.wav-8fafa46f3abf6ec495e53da18c09fda2.sample"
 
 [deps]
 
-source_file="res://Sounds/Anomalies/ding1.wav"
-dest_files=[ "res://.import/ding1.wav-981be393a6222062f8bef42cbbbf9475.sample" ]
+source_file="res://Sounds/Sound Effects/Anomalies/correctAnomaly.wav"
+dest_files=[ "res://.import/correctAnomaly.wav-8fafa46f3abf6ec495e53da18c09fda2.sample" ]
 
 [params]
 
