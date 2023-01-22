@@ -23,6 +23,7 @@ var rooms = ["Hallway", "Room", "Bathroom", "Balcony", "Janitors_Closet"]
 
 var currentUsedRooms = []
 var currentAnomalies = {}
+var originalPositions = {}
 var possibleKeys = []
 var currentlyUsedKeys = []
 var correctKeyToGive
@@ -34,7 +35,7 @@ var currentRoomPressed = null
 func _ready():
 	randomize()
 	setUpScene()
-	hideAnomalies()	
+	hideAnomalies()
 	onLobby()
 	
 func _process(delta):
@@ -78,16 +79,8 @@ func resetKeyMeshes():
 	$Structures/Lobby/Sombra.visible = false
 
 func hideAnomalies():
-	$Structures/Hallway/ObjetoAdicional.visible = false
-	$Structures/Room/ObjetoAdicional.visible = false
-	$Structures/Bathroom/ObjetoAdicional.visible = false
-	$Structures/Balcony/ObjetoAdicional.visible = false
-	$Structures/Janitors_Closet/ObjetoAdicional.visible = false
-	$Structures/Hallway/ObjetoMovido.visible = false
-	$Structures/Room/ObjetoMovido.visible = false
-	$Structures/Bathroom/ObjetoMovido.visible = false
-	$Structures/Balcony/ObjetoMovido.visible = false
-	$Structures/Janitors_Closet/ObjetoMovido.visible = false
+	for i in rooms.size():
+		resetRoomAfterFixedAnomaly(rooms[i])
 
 func resetKeyButtons():
 	$GUI/Keys/key1.visible = true
@@ -197,30 +190,46 @@ func reviewAnomaly():
 func whileAnomaliesAreActive():
 	# Makes the anomalies happen visually
 	for i in currentAnomalies:
-		if possibleAnomalies[0] in currentAnomalies[i]:
+		var chosen = false
+		if possibleAnomalies[1] in currentAnomalies[i]:
 			var room = currentAnomalies[i]
-			var roomAnomalyObject = get_node("Structures/" + room[0] + "/Objeto")
-			var roomAnomalyObject2 = get_node("Structures/" + room[0] + "/ObjetoMovido")
-			roomAnomalyObject.visible = false
-			roomAnomalyObject2.visible = true
-		elif possibleAnomalies[1] in currentAnomalies[i]:
+			var objects = get_node("Structures/" + room[0] + "/Objetos").get_children()
+			while !chosen:
+				# Choses a random object that isnt aditional or moved, then makes it invisible
+				var randomObject = objects[randi() % (objects.size())]
+				if not "Adicional" in randomObject.name and not "Movido" in randomObject.name:
+					randomObject.visible = false
+					chosen = true
+		elif possibleAnomalies[0] in currentAnomalies[i]:
 			var room = currentAnomalies[i]
-			var roomAnomalyObject = get_node("Structures/" + room[0] + "/Objeto")
-			roomAnomalyObject.visible = false
+			var objects = get_node("Structures/" + room[0] + "/Objetos").get_children()
+			while !chosen:
+				# Choses a random object until it finds a move one (there can be multiple so this solution works well enough)
+				var randomObject = objects[randi() % (objects.size())]
+				var ogObject = objects[randi() % (objects.size())]
+				if "Movido" in randomObject.name and "Original" in ogObject.name:
+					ogObject.visible = false
+					randomObject.visible = true
+					chosen = true
 		elif possibleAnomalies[2] in currentAnomalies[i]:
 			var room = currentAnomalies[i]
-			var roomAnomalyObject = get_node("Structures/" + room[0] + "/ObjetoAdicional")
-			roomAnomalyObject.visible = true
+			var objects = get_node("Structures/" + room[0] + "/Objetos").get_children()
+			while !chosen:
+				# Choses a random object until it finds an additional one (there can be multiple so this works better than a for loop)
+				var randomObject = objects[randi() % (objects.size())]
+				if "Adicional" in randomObject.name:
+					randomObject.visible = true
+					chosen = true
 
 func resetRoomAfterFixedAnomaly(room):
 	# Get all the objects
-	var roomObject = get_node("Structures/" + room + "/Objeto")
-	var roomAdditionalObject = get_node("Structures/" + room + "/ObjetoAdicional")
-	var movedObject = get_node("Structures/" + room + "/ObjetoMovido")
+	var roomObjects = get_node("Structures/" + room + "/Objetos").get_children()
 	# Put them back to how they should be
-	roomObject.visible = true
-	roomAdditionalObject.visible = false
-	movedObject.visible = false
+	for i in roomObjects.size():
+		if "Adicional" in roomObjects[i].name or "Movido" in roomObjects[i].name:
+			roomObjects[i].visible = false
+		else:
+			roomObjects[i].visible = true
 
 func createShadowEvent():
 	var correctKeySet = false

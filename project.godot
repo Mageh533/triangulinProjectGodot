@@ -11,14 +11,14 @@ config_version=4
 [application]
 
 config/name="Trials Of Psycho"
-run/main_scene="res://Scenes/Level/LockedUpLevels/lockedUpReception.tscn"
+run/main_scene="res://Scenes/MainMenu/MainMenu.tscn"
 config/icon="res://Materials/icon.png"
 
 [display]
 
 window/size/width=1920
 window/size/height=1080
-window/size/borderless=true
+window/stretch/aspect="keep"
 
 [gui]
 

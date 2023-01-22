@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=2]
+[gd_scene load_steps=98 format=2]
 
 [ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_09.png" type="Texture" id=1]
 [ext_resource path="res://Models/Structures/desktop.dae" type="PackedScene" id=2]
@@ -10,7 +10,7 @@
 [ext_resource path="res://Fonts/Montserrat-Medium.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Models/Structures/MaletaAbajo.dae" type="PackedScene" id=9]
 [ext_resource path="res://Models/Structures/MaletaArriba.dae" type="PackedScene" id=10]
-[ext_resource path="res://Materials/kenney_prototype_textures/light/texture_01.png" type="Texture" id=11]
+[ext_resource path="res://Models/Structures/ESTANTE.dae" type="PackedScene" id=11]
 [ext_resource path="res://Materials/effects/static2.jpg" type="Texture" id=12]
 [ext_resource path="res://Materials/effects/static1.jpg" type="Texture" id=13]
 [ext_resource path="res://Materials/effects/static3.jpg" type="Texture" id=14]
@@ -33,6 +33,18 @@
 [ext_resource path="res://Sounds/Sound Effects/jumpscare.wav" type="AudioStream" id=31]
 [ext_resource path="res://Sounds/Sound Effects/Anomalies/correctAnomaly.wav" type="AudioStream" id=32]
 [ext_resource path="res://Sounds/Sound Effects/Anomalies/incorrectAnomaly.wav" type="AudioStream" id=33]
+[ext_resource path="res://Models/Structures/cuadro.dae" type="PackedScene" id=34]
+[ext_resource path="res://Models/Structures/Taburete.dae" type="PackedScene" id=35]
+[ext_resource path="res://Models/Structures/armario.dae" type="PackedScene" id=36]
+[ext_resource path="res://Models/Structures/cama.dae" type="PackedScene" id=37]
+[ext_resource path="res://Models/Structures/Maceta.dae" type="PackedScene" id=38]
+[ext_resource path="res://Models/Structures/CajonesRopa.dae" type="PackedScene" id=39]
+[ext_resource path="res://Models/Structures/Retrete.dae" type="PackedScene" id=40]
+[ext_resource path="res://Models/Structures/barandilla.dae" type="PackedScene" id=41]
+[ext_resource path="res://Models/Structures/Libro.dae" type="PackedScene" id=42]
+[ext_resource path="res://Models/Structures/armarioDeMedicina.dae" type="PackedScene" id=43]
+[ext_resource path="res://Models/Structures/botella.dae" type="PackedScene" id=44]
+[ext_resource path="res://Models/Structures/mesita.dae" type="PackedScene" id=45]
 
 [sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 0.0666667 )
@@ -400,8 +412,6 @@ uv1_scale = Vector3( 12, 2, 1 )
 albedo_texture = ExtResource( 5 )
 uv1_scale = Vector3( 12, 2, 1 )
 
-[sub_resource type="CubeMesh" id=48]
-
 [sub_resource type="BoxShape" id=22]
 
 [sub_resource type="CubeMesh" id=23]
@@ -421,15 +431,6 @@ uv1_scale = Vector3( 4, 1, 1 )
 [sub_resource type="SpatialMaterial" id=28]
 albedo_texture = ExtResource( 4 )
 uv1_scale = Vector3( 4, 1, 1 )
-
-[sub_resource type="CubeMesh" id=29]
-
-[sub_resource type="CapsuleMesh" id=30]
-
-[sub_resource type="CylinderMesh" id=31]
-
-[sub_resource type="SpatialMaterial" id=32]
-albedo_texture = ExtResource( 11 )
 
 [sub_resource type="Environment" id=9]
 background_mode = 1
@@ -513,6 +514,7 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
+frame = 1
 playing = true
 
 [node name="GameOver" type="Label" parent="GUI/OnPC"]
@@ -782,6 +784,7 @@ rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 10"
 
 [node name="GameOver" type="Control" parent="GUI"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
@@ -789,7 +792,6 @@ anchor_bottom = 1.0
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
-frame = 4
 playing = true
 
 [node name="Label" type="Label" parent="GUI/GameOver"]
@@ -1006,17 +1008,22 @@ transform = Transform( 1, 0, 0, 0, -0.195946, 0.980615, 0, -0.980615, -0.195946,
 spot_range = 16.8993
 spot_angle = 54.3101
 
-[node name="Objeto" type="MeshInstance" parent="Structures/Hallway"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.87251, 1.5551, 13.4382 )
-mesh = SubResource( 48 )
+[node name="Objetos" type="Spatial" parent="Structures/Hallway"]
 
-[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Hallway"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.87251, 1.5551, 24.9537 )
-mesh = SubResource( 48 )
+[node name="cuadro" parent="Structures/Hallway/Objetos" instance=ExtResource( 34 )]
+transform = Transform( -0.1, 0, -7.54979e-09, 0, 0.1, 0, 1.50996e-08, 0, -0.05, 3.85055, 3.3394, 12.671 )
 
-[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Hallway"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.87251, 1.5551, 16.5271 )
-mesh = SubResource( 48 )
+[node name="MacetaOriginal" parent="Structures/Hallway/Objetos" instance=ExtResource( 38 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -3.4397, 2.0128, 12.9755 )
+
+[node name="Taburete" parent="Structures/Hallway/Objetos" instance=ExtResource( 35 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -3.14993, 0.540298, 15.0276 )
+
+[node name="cuadroAdicional" parent="Structures/Hallway/Objetos" instance=ExtResource( 34 )]
+transform = Transform( -0.1, 0, -7.54979e-09, 0, 0.1, 0, 1.50996e-08, 0, -0.05, 3.85055, 3.3394, 18.386 )
+
+[node name="MacetaMovido" parent="Structures/Hallway/Objetos" instance=ExtResource( 38 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 3.16944, 0.806218, 18.6954 )
 
 [node name="Room" type="Node" parent="Structures"]
 
@@ -1055,21 +1062,22 @@ transform = Transform( 1, 0, 0, 0, -0.195946, 0.980615, 0, -0.980615, -0.195946,
 spot_range = 16.8993
 spot_angle = 54.3101
 
-[node name="Bed" type="MeshInstance" parent="Structures/Room"]
-transform = Transform( 2.81373, 0, 0, 0, 0.414011, 0, 0, 0, 2.25393, -21.2763, 0.929449, 18.4481 )
-mesh = SubResource( 29 )
+[node name="Objetos" type="Spatial" parent="Structures/Room"]
 
-[node name="Objeto" type="MeshInstance" parent="Structures/Room"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22.685, 1.5551, 23.7464 )
-mesh = SubResource( 48 )
+[node name="Cama" parent="Structures/Room/Objetos" instance=ExtResource( 37 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.6834, -0.0642769, 17.8484 )
 
-[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Room"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -23.0995, 1.5551, 14.9289 )
-mesh = SubResource( 48 )
+[node name="CajonesRopa" parent="Structures/Room/Objetos" instance=ExtResource( 39 )]
+transform = Transform( 0.25, 0, 0, 0, 0.313405, 0, 0, 0, 0.25, -23.3057, 0.469232, 15.7104 )
 
-[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Room"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5996, 2.08823, 19.3205 )
-mesh = SubResource( 48 )
+[node name="ArmarioOriginal" parent="Structures/Room/Objetos" instance=ExtResource( 36 )]
+transform = Transform( -0.135469, 0, -1.1843e-08, 0, 0.128761, 0, 8.74228e-09, 0, -0.1, -17.4677, 0.0105691, 24.6796 )
+
+[node name="LibroAdicional" parent="Structures/Room/Objetos" instance=ExtResource( 42 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -23.5213, 2.88322, 15.5133 )
+
+[node name="ArmarioMovido" parent="Structures/Room/Objetos" instance=ExtResource( 36 )]
+transform = Transform( -0.135469, 0, -1.1843e-08, 0, 0.128761, 0, 8.74228e-09, 0, -0.1, -21.906, 0.0105691, 24.6796 )
 
 [node name="Bathroom" type="Node" parent="Structures"]
 
@@ -1108,21 +1116,19 @@ transform = Transform( 1, 0, 0, 0, -0.195946, 0.980615, 0, -0.980615, -0.195946,
 spot_range = 16.8993
 spot_angle = 54.3101
 
-[node name="Bathroom" type="MeshInstance" parent="Structures/Bathroom"]
-transform = Transform( 1, 0, 0, 0, -0.0313584, 0.999508, 0, -0.999508, -0.0313584, -23.352, 3.87977, 39.3907 )
-mesh = SubResource( 30 )
+[node name="Objetos" type="Spatial" parent="Structures/Bathroom"]
 
-[node name="Objeto" type="MeshInstance" parent="Structures/Bathroom"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22.7544, 1.5551, 43.8012 )
-mesh = SubResource( 48 )
+[node name="RetreteOriginal" parent="Structures/Bathroom/Objetos" instance=ExtResource( 40 )]
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -23.1166, 1.43738, 39.6487 )
 
-[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Bathroom"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22.8539, 1.5551, 35.505 )
-mesh = SubResource( 48 )
+[node name="armarioDeMedicina" parent="Structures/Bathroom/Objetos" instance=ExtResource( 43 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -23.8713, 3.13891, 37.5314 )
 
-[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Bathroom"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -17.334, 1.5551, 43.8012 )
-mesh = SubResource( 48 )
+[node name="botellaAdicional" parent="Structures/Bathroom/Objetos" instance=ExtResource( 44 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -19.6818, 0.488264, 40.6166 )
+
+[node name="RetreteMovido" parent="Structures/Bathroom/Objetos" instance=ExtResource( 40 )]
+transform = Transform( -0.0673303, 0, 0.188326, 0, 0.2, 0, -0.188326, 0, -0.0673303, -18.3411, 1.43738, 43.6521 )
 
 [node name="Balcony" type="Node" parent="Structures"]
 
@@ -1147,7 +1153,7 @@ mesh = SubResource( 25 )
 material/0 = SubResource( 27 )
 
 [node name="Wall2" type="StaticBody" parent="Structures/Balcony"]
-transform = Transform( -6.47705, 0, 0.00256385, 0, 2.46725, 0, -0.0593503, 0, -0.279799, 18.2011, 2.91317, 25.4823 )
+transform = Transform( -6.47705, 0, 0.00256385, 0, 2.46725, 0, -0.0593503, 0, -0.279799, 18.1929, 2.91317, 25.4649 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Structures/Balcony/Wall2"]
 shape = SubResource( 24 )
@@ -1161,43 +1167,41 @@ transform = Transform( 0.00916283, -0.980574, -0.195938, 0, -0.195946, 0.980615,
 spot_range = 16.8993
 spot_angle = 54.3101
 
-[node name="MeshInstance" type="MeshInstance" parent="Structures/Balcony"]
-transform = Transform( -0.219431, 0.057104, -1.28199e-10, 0, -2.72452e-07, -0.320124, -0.00201042, -6.23271, 1.39925e-08, 23.4781, 2.22154, 18.9162 )
-mesh = SubResource( 31 )
+[node name="Wall3" type="StaticBody" parent="Structures/Balcony"]
+transform = Transform( -2.83133e-07, 0, -0.279811, 0, 2.46725, 0, 2.12949, 0, -4.02105e-09, 22.3323, 2.91317, 14.6764 )
 
-[node name="Objeto" type="MeshInstance" parent="Structures/Balcony"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.0169, 1.5551, 14.1373 )
-mesh = SubResource( 48 )
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Balcony/Wall3"]
+shape = SubResource( 24 )
 
-[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Balcony"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.1451, 1.36848, 24.1238 )
-mesh = SubResource( 48 )
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Balcony/Wall3"]
+mesh = SubResource( 25 )
+material/0 = SubResource( 27 )
 
-[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Balcony"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.6474, 3.52732, 17.8346 )
-mesh = SubResource( 48 )
+[node name="Wall4" type="StaticBody" parent="Structures/Balcony"]
+transform = Transform( -2.83133e-07, 0, -0.279811, 0, 2.46725, 0, 1.60574, 0, -3.03206e-09, 22.3323, 2.91317, 23.5303 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Structures/Balcony/Wall4"]
+shape = SubResource( 24 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Structures/Balcony/Wall4"]
+mesh = SubResource( 25 )
+material/0 = SubResource( 27 )
+
+[node name="Objetos" type="Spatial" parent="Structures/Balcony"]
+
+[node name="barandilla" parent="Structures/Balcony/Objetos" instance=ExtResource( 41 )]
+transform = Transform( -8.74228e-09, 0, -0.1, 0, 0.15, 0, 0.2, 0, -4.37114e-09, 24.5011, 0.511872, 17.631 )
+
+[node name="mesitaOriginal" parent="Structures/Balcony/Objetos" instance=ExtResource( 45 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.05, 0, 0.05, 0, -2.18557e-09, 21.7098, 0.481539, 23.1321 )
+
+[node name="mesitaMovido" parent="Structures/Balcony/Objetos" instance=ExtResource( 45 )]
+transform = Transform( -0.0424974, 0, -0.0263433, 0, 0.05, 0, 0.0263433, 0, -0.0424974, 18.089, 0.481539, 18.3825 )
+
+[node name="botellaAdicional" parent="Structures/Balcony/Objetos" instance=ExtResource( 44 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 21.297, 1.59003, 23.0736 )
 
 [node name="Janitors_Closet" type="Node" parent="Structures"]
-
-[node name="Floor2" type="StaticBody" parent="Structures/Janitors_Closet"]
-transform = Transform( 1.20001, 0, 0, 0, 0.250033, 0, 0, 0, 1.29093, 19.0329, 4.1296, 43.8992 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Floor2"]
-shape = SubResource( 22 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Floor2"]
-mesh = SubResource( 23 )
-material/0 = SubResource( 32 )
-
-[node name="Floor3" type="StaticBody" parent="Structures/Janitors_Closet"]
-transform = Transform( 1.20001, 0, 0, 0, 0.250033, 0, 0, 0, 1.29093, 19.008, 2.32781, 43.8747 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Structures/Janitors_Closet/Floor3"]
-shape = SubResource( 22 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Structures/Janitors_Closet/Floor3"]
-mesh = SubResource( 23 )
-material/0 = SubResource( 32 )
 
 [node name="Floor" type="StaticBody" parent="Structures/Janitors_Closet"]
 transform = Transform( 3.45871, 0, 0, 0, 0.488253, 0, 0, 0, 3.72075, 21.2617, 0, 41.4388 )
@@ -1234,17 +1238,25 @@ transform = Transform( 1, 0, 0, 0, -0.195946, 0.980615, 0, -0.980615, -0.195946,
 spot_range = 16.8993
 spot_angle = 54.3101
 
-[node name="Objeto" type="MeshInstance" parent="Structures/Janitors_Closet"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6117, 1.45879, 43.9622 )
-mesh = SubResource( 48 )
+[node name="Objetos" type="Spatial" parent="Structures/Janitors_Closet"]
 
-[node name="ObjetoAdicional" type="MeshInstance" parent="Structures/Janitors_Closet"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4495, 1.5551, 43.9114 )
-mesh = SubResource( 48 )
+[node name="botella" parent="Structures/Janitors_Closet/Objetos" instance=ExtResource( 44 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 22.5906, 3.45884, 44.0737 )
 
-[node name="ObjetoMovido" type="MeshInstance" parent="Structures/Janitors_Closet"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6117, 5.30543, 43.9622 )
-mesh = SubResource( 48 )
+[node name="botellaAdicional" parent="Structures/Janitors_Closet/Objetos" instance=ExtResource( 44 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 22.2672, 3.45884, 44.0737 )
+
+[node name="cuadroOriginal" parent="Structures/Janitors_Closet/Objetos" instance=ExtResource( 34 )]
+transform = Transform( 0.0933311, 0.00118048, -0.0358874, 0.0359068, -0.00306836, 0.0932807, 0, -0.0999459, -0.00328761, 18.2594, 2.99893, 44.835 )
+
+[node name="cuadroMovido" parent="Structures/Janitors_Closet/Objetos" instance=ExtResource( 34 )]
+transform = Transform( 0.000776665, 0.00908923, -0.099583, 0.0996369, -0.00851388, 0, -0.00847838, -0.0992215, -0.00912235, 19.3357, 0.578314, 42.2149 )
+
+[node name="ESTANTE" parent="Structures/Janitors_Closet" instance=ExtResource( 11 )]
+transform = Transform( -0.5, 0, -4.37114e-08, 0, 0.75, 0, 4.37114e-08, 0, -0.5, 18.539, 0.427082, 40.5656 )
+
+[node name="ESTANTE2" parent="Structures/Janitors_Closet" instance=ExtResource( 11 )]
+transform = Transform( -2.18557e-08, 0, -0.5, 0, 0.75, 0, 0.5, 0, -2.18557e-08, 22.0584, 0.488253, 44.3069 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00614643, 2.42703, -1.50567 )
