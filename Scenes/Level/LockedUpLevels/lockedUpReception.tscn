@@ -784,7 +784,6 @@ rect_pivot_offset = Vector2( 140, 40 )
 text = "Key 10"
 
 [node name="GameOver" type="Control" parent="GUI"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
