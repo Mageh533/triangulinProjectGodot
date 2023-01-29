@@ -11,7 +11,7 @@ var flashlightBattery = 100
 var noise = 0
 
 # Normal variables
-export var speed = 3
+export var speed = 4
 const ACCEL_DEFAULT = 7
 const ACCEL_AIR = 1
 onready var accel = ACCEL_DEFAULT

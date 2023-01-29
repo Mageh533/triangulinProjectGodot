@@ -3,7 +3,7 @@
 [ext_resource path="res://Scripts/Player/firstPesonController.gd" type="Script" id=1]
 
 [sub_resource type="BoxShape" id=1]
-extents = Vector3( 0.399815, 1, 0.427465 )
+extents = Vector3( 0.399815, 1.25093, 0.427465 )
 
 [sub_resource type="Animation" id=3]
 length = 0.001
@@ -61,7 +61,7 @@ tracks/1/keys = {
 }
 
 [node name="Player" type="KinematicBody"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.662908, 0 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00597382, 2.47488, 0.0119197 )
 collision_mask = 14
 script = ExtResource( 1 )
 
@@ -69,7 +69,7 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Head" type="Spatial" parent="."]
-transform = Transform( 1.01616, 0, 0, 0, 1.01616, 0, 0, 0, 1.01616, 0, 0, 0 )
+transform = Transform( 1.01616, 0, 0, 0, 1.01616, 0, 0, 0, 1.01616, 0, 0.316079, 0 )
 
 [node name="FirstPerson" type="Camera" parent="Head"]
 transform = Transform( 0.492048, 0, 0, 0, 0.492048, 0, 0, 0, 0.492048, 0.00855039, 0.594237, -0.00767587 )

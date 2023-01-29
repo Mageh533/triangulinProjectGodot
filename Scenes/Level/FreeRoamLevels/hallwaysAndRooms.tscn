@@ -1,0 +1,252 @@
+[gd_scene load_steps=29 format=2]
+
+[ext_resource path="res://Materials/kenney_prototype_textures/dark/texture_01.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Player/firstPesonController.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Models/Structures/LlaveDeHotel.dae" type="PackedScene" id=3]
+[ext_resource path="res://Models/Structures/Tablero.dae" type="PackedScene" id=4]
+[ext_resource path="res://Models/Structures/desktop.dae" type="PackedScene" id=5]
+[ext_resource path="res://Materials/kenney_prototype_textures/orange/texture_01.png" type="Texture" id=6]
+[ext_resource path="res://Models/Structures/Silla.dae" type="PackedScene" id=7]
+[ext_resource path="res://Models/Structures/Taburete.dae" type="PackedScene" id=8]
+[ext_resource path="res://Models/Structures/cuadro.dae" type="PackedScene" id=9]
+[ext_resource path="res://Models/Structures/Maceta.dae" type="PackedScene" id=10]
+[ext_resource path="res://Materials/kenney_prototype_textures/orange/texture_12.png" type="Texture" id=11]
+[ext_resource path="res://Scenes/Enemies/anana.tscn" type="PackedScene" id=12]
+
+[sub_resource type="BoxShape" id=8]
+extents = Vector3( 2.6243, 4.54243, 2.45462 )
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 1.73992, 1, 2.06742 )
+
+[sub_resource type="CubeMesh" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_texture = ExtResource( 1 )
+uv1_scale = Vector3( 8, 8, 8 )
+
+[sub_resource type="BoxShape" id=5]
+
+[sub_resource type="CubeMesh" id=6]
+
+[sub_resource type="SpatialMaterial" id=7]
+albedo_texture = ExtResource( 6 )
+uv1_scale = Vector3( 5, 1, 1 )
+
+[sub_resource type="BoxShape" id=16]
+
+[sub_resource type="BoxShape" id=9]
+
+[sub_resource type="CubeMesh" id=10]
+
+[sub_resource type="SpatialMaterial" id=11]
+albedo_texture = ExtResource( 1 )
+uv1_scale = Vector3( 3, 10, 1 )
+
+[sub_resource type="BoxShape" id=12]
+
+[sub_resource type="CubeMesh" id=13]
+
+[sub_resource type="SpatialMaterial" id=14]
+albedo_texture = ExtResource( 11 )
+uv1_scale = Vector3( 12, 2, 1 )
+
+[sub_resource type="SpatialMaterial" id=15]
+albedo_texture = ExtResource( 11 )
+uv1_scale = Vector3( 12, 2, 1 )
+
+[sub_resource type="Environment" id=4]
+background_mode = 1
+
+[node name="Main" type="Node"]
+
+[node name="Lobby" type="Spatial" parent="."]
+
+[node name="DesktopCol" type="StaticBody" parent="Lobby"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68208, 0, 3.90367 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="DesktopCollision" type="CollisionShape" parent="Lobby/DesktopCol"]
+shape = SubResource( 8 )
+
+[node name="Floor1" type="StaticBody" parent="Lobby"]
+transform = Transform( 8.17617, 0, 0, 0, 0.460204, 0, 0, 0, 6.85759, 0, 0.0407048, -7.04699 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Lobby/Floor1"]
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Lobby/Floor1"]
+transform = Transform( 1.74871, 0, 0, 0, 1, 0, 0, 0, 2.07371, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="Wall" type="StaticBody" parent="Lobby"]
+transform = Transform( 14.6697, 0, 0, 0, 2.88426, 0, 0, 0, 0.314296, 0, 2.91357, 6.84489 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Lobby/Wall"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Lobby/Wall"]
+mesh = SubResource( 6 )
+material/0 = SubResource( 7 )
+
+[node name="desktop" parent="Lobby" instance=ExtResource( 5 )]
+transform = Transform( -4.37114e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.37114e-09, -0.888438, 0.187129, 3.73991 )
+
+[node name="LlaveDeHotel" parent="Lobby/desktop" instance=ExtResource( 3 )]
+transform = Transform( -4.37114e-08, -1, -1.42109e-14, 1, -4.37114e-08, 0, 0, -1.42109e-14, 1, -0.0427475, 19.8786, 4.8286 )
+
+[node name="TableDeLlaves" type="Spatial" parent="Lobby"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.84489 )
+
+[node name="Tablero" parent="Lobby/TableDeLlaves" instance=ExtResource( 4 )]
+transform = Transform( -1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -0.144995, 2.26912, -0.793122 )
+
+[node name="Llaves" type="Spatial" parent="Lobby/TableDeLlaves"]
+
+[node name="LlaveDeHotel1" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, 0.721919, 3.0829, -0.509203 )
+
+[node name="LlaveDeHotel2" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, 0.319287, 3.08239, -0.505964 )
+
+[node name="LlaveDeHotel3" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.109256, 3.08321, -0.52179 )
+
+[node name="LlaveDeHotel4" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.490944, 3.08239, -0.507544 )
+
+[node name="LlaveDeHotel5" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.806456, 3.08239, -0.501423 )
+
+[node name="LlaveDeHotel6" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, 0.746923, 2.47516, -0.509203 )
+
+[node name="LlaveDeHotel7" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, 0.344291, 2.47464, -0.505964 )
+
+[node name="LlaveDeHotel8" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.0842515, 2.47546, -0.52179 )
+
+[node name="LlaveDeHotel9" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.46594, 2.47464, -0.507544 )
+
+[node name="LlaveDeHotel10" parent="Lobby/TableDeLlaves/Llaves" instance=ExtResource( 3 )]
+transform = Transform( -2.18557e-09, 0, -0.05, 0, 0.035, 0, 0.05, 0, -2.18557e-09, -0.781452, 2.47464, -0.501423 )
+
+[node name="Silla" parent="Lobby" instance=ExtResource( 7 )]
+transform = Transform( 0.426172, 0, 0, 0, 0.528731, 0, 0, 0, 0.412791, -0.602811, 0.0494533, 6.57643 )
+
+[node name="SpotLight" type="SpotLight" parent="Lobby"]
+transform = Transform( 1, 0, 0, 0, 0.00762699, 0.999971, 0, -0.999971, 0.00762699, 0, 6.17907, 0 )
+light_energy = 2.167
+spot_range = 17.2526
+spot_angle = 68.5508
+
+[node name="Wall2" type="StaticBody" parent="Lobby"]
+transform = Transform( -6.41234e-07, 0, 0.314296, 0, 2.88426, 0, -2.90286, 0, -2.71855e-09, 14.4393, 2.91357, 3.67765 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Lobby/Wall2"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Lobby/Wall2"]
+mesh = SubResource( 6 )
+material/0 = SubResource( 7 )
+
+[node name="Wall3" type="StaticBody" parent="Lobby"]
+transform = Transform( -6.41234e-07, 0, 0.314296, 0, 2.88426, 0, -6.36596, 0, -5.96177e-09, 14.4393, 2.91357, -15.1129 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Lobby/Wall3"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Lobby/Wall3"]
+mesh = SubResource( 6 )
+material/0 = SubResource( 7 )
+
+[node name="CrystalWall" type="StaticBody" parent="Lobby"]
+transform = Transform( 0.31755, 0, 0, 0, 2.66603, 0, 0, 0, 3.93841, 14.4635, 3.21669, -3.99131 )
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Lobby/CrystalWall"]
+shape = SubResource( 16 )
+
+[node name="Wall4" type="StaticBody" parent="Lobby"]
+transform = Transform( -6.41234e-07, 0, 0.314296, 0, 2.88426, 0, -13.9591, 0, -1.30728e-08, -14.6629, 2.91357, -7.59155 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Lobby/Wall4"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Lobby/Wall4"]
+mesh = SubResource( 6 )
+material/0 = SubResource( 7 )
+
+[node name="UnreachableHallway" type="Spatial" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 6.53224, 0, -4.08123 )
+
+[node name="Floor" type="StaticBody" parent="UnreachableHallway"]
+transform = Transform( 3.99637, 0, 0, 0, 0.479705, 0, 0, 0, 11.596, -0.102888, 0.0605927, 19.2079 )
+
+[node name="CollisionShape" type="CollisionShape" parent="UnreachableHallway/Floor"]
+shape = SubResource( 9 )
+
+[node name="MeshInstance" type="MeshInstance" parent="UnreachableHallway/Floor"]
+mesh = SubResource( 10 )
+material/0 = SubResource( 11 )
+
+[node name="Wall" type="StaticBody" parent="UnreachableHallway"]
+transform = Transform( 0.391757, 0, 0, 0, 2.67852, 0, 0, 0, 11.4763, 4.26423, 3.13447, 19.0969 )
+
+[node name="CollisionShape" type="CollisionShape" parent="UnreachableHallway/Wall"]
+shape = SubResource( 12 )
+
+[node name="MeshInstance" type="MeshInstance" parent="UnreachableHallway/Wall"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0183697, 0.0106895, 0.00146055 )
+mesh = SubResource( 13 )
+material/0 = SubResource( 14 )
+
+[node name="Wall2" type="StaticBody" parent="UnreachableHallway"]
+transform = Transform( 0.391757, 0, 0, 0, 2.67305, 0, 0, 0, 11.4763, -4.49048, 3.13447, 19.0969 )
+
+[node name="CollisionShape" type="CollisionShape" parent="UnreachableHallway/Wall2"]
+shape = SubResource( 12 )
+
+[node name="MeshInstance" type="MeshInstance" parent="UnreachableHallway/Wall2"]
+mesh = SubResource( 13 )
+material/0 = SubResource( 15 )
+
+[node name="SpotLight" type="SpotLight" parent="UnreachableHallway"]
+transform = Transform( 1, 0, 0, 0, -0.195946, 0.980615, 0, -0.980615, -0.195946, 0.371839, 8.00607, 13.9522 )
+spot_range = 16.8993
+spot_angle = 54.3101
+
+[node name="Objetos" type="Spatial" parent="UnreachableHallway"]
+
+[node name="cuadro" parent="UnreachableHallway/Objetos" instance=ExtResource( 9 )]
+transform = Transform( -0.1, 0, -7.54979e-09, 0, 0.1, 0, 1.50996e-08, 0, -0.05, 3.85055, 3.3394, 12.671 )
+
+[node name="MacetaOriginal" parent="UnreachableHallway/Objetos" instance=ExtResource( 10 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -3.4397, 2.0128, 12.9755 )
+
+[node name="Taburete" parent="UnreachableHallway/Objetos" instance=ExtResource( 8 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -3.14993, 0.540298, 15.0276 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 4 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -3.97656, 1.66538, 4.37833 )
+
+[node name="Anana" parent="." instance=ExtResource( 12 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85295, 3.84145, -4.21576 )

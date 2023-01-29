@@ -437,6 +437,7 @@ background_mode = 1
 
 [node name="Main" type="Node"]
 script = ExtResource( 7 )
+shadowDifficulty = 20
 
 [node name="AllCameras" type="Spatial" parent="."]
 
@@ -514,7 +515,6 @@ modulate = Color( 1, 1, 1, 0.0666667 )
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
-frame = 1
 playing = true
 
 [node name="GameOver" type="Label" parent="GUI/OnPC"]
@@ -791,6 +791,7 @@ anchor_bottom = 1.0
 position = Vector2( 955, 537.5 )
 scale = Vector2( 2.99688, 2.23125 )
 frames = SubResource( 33 )
+frame = 4
 playing = true
 
 [node name="Label" type="Label" parent="GUI/GameOver"]
