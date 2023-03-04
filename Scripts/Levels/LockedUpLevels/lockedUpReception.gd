@@ -53,6 +53,7 @@ func _process(delta):
 
 # My own Functions
 func setUpScene():
+	$Structures/Lobby/MonstruoMano.visible = false
 	$GUI/OnPC/IncidentMenu.visible = false
 	$GUI/OnPC/AnomalyDetected.visible = false
 	$GUI/OnPC/IncidentMenu/Panel/CooldownCounter.visible = false
@@ -116,6 +117,7 @@ func incorrectAnomalyReported():
 		$Structures/Lobby/MaletaArriba/Animacion.play("Fase2")
 	elif errors == 3:
 		$Structures/Lobby/MaletaArriba/Animacion.play("Fase3")
+		$Structures/Lobby/MonstruoMano.visible = true
 	elif errors == 4:
 		$Structures/Lobby/MaletaArriba/Animacion.play("Fase4")
 	elif errors == 5:
